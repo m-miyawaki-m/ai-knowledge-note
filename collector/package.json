@@ -1,0 +1,10 @@
+{
+  "name": "ai-knowledge-note-collector",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "collect": "node src/index.js"
+  },
+  "dependencies": {}
+}
