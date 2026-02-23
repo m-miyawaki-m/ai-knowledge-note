@@ -1,0 +1,99 @@
+{
+  "category": "architectures",
+  "displayName": "モデルアーキテクチャ",
+  "description": "AIモデルの構造設計に関する用語。Transformer以降の主要アーキテクチャを体系的に整理する。",
+  "topics": [
+    {
+      "id": "arch-topic-transformer",
+      "term": "Transformer",
+      "termJa": "トランスフォーマー",
+      "meaning": "2017年にGoogle Brainが発表した「Attention Is All You Need」で提案されたニューラルネットワークアーキテクチャ。RNNやCNNを使わず、Self-Attention機構のみで系列データを処理する。並列計算が可能で学習効率が高く、GPTやBERTなど現代の大規模言語モデルの基盤となっている。",
+      "relatedConceptIds": ["arch-concept-self-attention", "arch-concept-positional-encoding"],
+      "sourceUrl": "https://arxiv.org/abs/1706.03762"
+    },
+    {
+      "id": "arch-topic-diffusion",
+      "term": "Diffusion Model",
+      "termJa": "拡散モデル",
+      "meaning": "データにノイズを段階的に加え、そのノイズ除去過程を学習することで新しいデータを生成するモデル。画像生成（Stable Diffusion, DALL-E）で大きな成功を収め、GANに代わる主流の生成モデルとなった。",
+      "relatedConceptIds": ["arch-concept-denoising"],
+      "sourceUrl": "https://arxiv.org/abs/2006.11239"
+    }
+  ],
+  "concepts": [
+    {
+      "id": "arch-concept-self-attention",
+      "term": "Self-Attention",
+      "termJa": "自己注意機構",
+      "topicId": "arch-topic-transformer",
+      "meaning": "入力系列内の各要素が、他のすべての要素との関連度（Attention Weight）を計算する機構。Query, Key, Valueの3つの行列を用いて、文脈に応じた重み付き表現を生成する。長距離依存関係の捕捉に優れる。",
+      "relatedTermIds": ["arch-term-multi-head-attention", "arch-term-scaled-dot-product"],
+      "sourceUrl": "https://arxiv.org/abs/1706.03762"
+    },
+    {
+      "id": "arch-concept-positional-encoding",
+      "term": "Positional Encoding",
+      "termJa": "位置エンコーディング",
+      "topicId": "arch-topic-transformer",
+      "meaning": "Transformerは系列の順序情報を持たないため、入力埋め込みに位置情報を付加する手法。元論文ではsin/cos関数を使用。後にRoPE（Rotary Position Embedding）やALiBi等の改良手法が登場した。",
+      "relatedTermIds": ["arch-term-rope"],
+      "sourceUrl": "https://arxiv.org/abs/1706.03762"
+    },
+    {
+      "id": "arch-concept-denoising",
+      "term": "Denoising Process",
+      "termJa": "ノイズ除去プロセス",
+      "topicId": "arch-topic-diffusion",
+      "meaning": "拡散モデルの核心的な概念。Forward process（ノイズ追加）の逆過程をニューラルネットワークで学習し、ランダムノイズから段階的にデータを復元する。各ステップでU-Netなどのモデルがノイズを予測・除去する。",
+      "relatedTermIds": ["arch-term-ddpm", "arch-term-classifier-free-guidance"],
+      "sourceUrl": "https://arxiv.org/abs/2006.11239"
+    }
+  ],
+  "terms": [
+    {
+      "id": "arch-term-multi-head-attention",
+      "term": "Multi-Head Attention",
+      "termJa": "マルチヘッドアテンション",
+      "meaning": "Self-Attentionを複数のヘッド（部分空間）で並列に実行し、異なる観点からの注意パターンを捕捉する手法。各ヘッドの出力を結合・線形変換して最終的な表現を得る。",
+      "type": "technique",
+      "tags": ["transformer", "attention"],
+      "sourceUrl": "https://arxiv.org/abs/1706.03762"
+    },
+    {
+      "id": "arch-term-scaled-dot-product",
+      "term": "Scaled Dot-Product Attention",
+      "termJa": "スケール化ドット積アテンション",
+      "meaning": "QueryとKeyの内積をKeyの次元数の平方根で割ることで、勾配消失を防ぎつつAttention Weightを計算する手法。Softmaxで正規化後、Valueとの積でコンテキスト表現を得る。",
+      "type": "technique",
+      "tags": ["transformer", "attention"],
+      "sourceUrl": "https://arxiv.org/abs/1706.03762"
+    },
+    {
+      "id": "arch-term-rope",
+      "term": "RoPE (Rotary Position Embedding)",
+      "termJa": "回転位置埋め込み",
+      "meaning": "相対位置情報を回転行列として埋め込みベクトルに適用する手法。絶対位置と相対位置の両方の情報を自然に表現でき、系列長の外挿性能にも優れる。LLaMA, Qwen等の多くのLLMが採用。",
+      "type": "technique",
+      "tags": ["transformer", "positional-encoding"],
+      "sourceUrl": "https://arxiv.org/abs/2104.09864"
+    },
+    {
+      "id": "arch-term-ddpm",
+      "term": "DDPM (Denoising Diffusion Probabilistic Models)",
+      "termJa": "ノイズ除去拡散確率モデル",
+      "meaning": "拡散モデルの代表的実装。マルコフ連鎖に基づくForward/Reverse processを定式化し、変分下界を最適化する。Stable Diffusionの理論的基盤。",
+      "type": "model",
+      "tags": ["diffusion", "generative"],
+      "sourceUrl": "https://arxiv.org/abs/2006.11239"
+    },
+    {
+      "id": "arch-term-classifier-free-guidance",
+      "term": "Classifier-Free Guidance",
+      "termJa": "分類器不要ガイダンス",
+      "meaning": "条件付き生成と無条件生成の出力を線形補間することで、外部分類器なしに生成品質を制御する手法。ガイダンススケールを調整することで忠実度と多様性のバランスを取れる。",
+      "type": "technique",
+      "tags": ["diffusion", "generative"],
+      "sourceUrl": "https://arxiv.org/abs/2207.12598"
+    }
+  ]
+}
