@@ -2,7 +2,184 @@
   "category": "foundations",
   "displayName": "基礎理論",
   "description": "AI・機械学習の基礎となる数学・統計・情報理論の用語。",
-  "topics": [],
-  "concepts": [],
-  "terms": []
+  "topics": [
+    {
+      "id": "found-topic-basic-terms",
+      "term": "基本用語",
+      "termJa": "基本用語",
+      "meaning": "AIの基本的な用語と概念を整理する",
+      "relatedConceptIds": ["found-concept-text-processing", "found-concept-model-components"]
+    },
+    {
+      "id": "found-topic-learning",
+      "term": "学習の仕組み",
+      "termJa": "学習の仕組み",
+      "meaning": "機械学習の学習プロセスに関する用語",
+      "relatedConceptIds": ["found-concept-learning-process", "found-concept-evaluation"]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "found-concept-text-processing",
+      "term": "テキスト処理の基礎",
+      "termJa": "テキスト処理の基礎",
+      "topicId": "found-topic-basic-terms",
+      "meaning": "自然言語をAIが処理するための基本概念",
+      "relatedTermIds": ["found-term-token", "found-term-embedding", "found-term-vocabulary"]
+    },
+    {
+      "id": "found-concept-model-components",
+      "term": "モデルの構成要素",
+      "termJa": "モデルの構成要素",
+      "topicId": "found-topic-basic-terms",
+      "meaning": "ニューラルネットワークを構成する基本要素",
+      "relatedTermIds": ["found-term-parameter", "found-term-weight", "found-term-bias", "found-term-activation-function"]
+    },
+    {
+      "id": "found-concept-learning-process",
+      "term": "学習プロセス",
+      "termJa": "学習プロセス",
+      "topicId": "found-topic-learning",
+      "meaning": "モデルの訓練に関わる基本概念",
+      "relatedTermIds": ["found-term-epoch", "found-term-batch-size", "found-term-learning-rate", "found-term-loss-function", "found-term-gradient-descent"]
+    },
+    {
+      "id": "found-concept-evaluation",
+      "term": "評価と推論",
+      "termJa": "評価と推論",
+      "topicId": "found-topic-learning",
+      "meaning": "学習済みモデルの評価と利用に関する概念",
+      "relatedTermIds": ["found-term-inference", "found-term-overfitting", "found-term-fine-tuning", "found-term-accuracy"]
+    }
+  ],
+  "terms": [
+    {
+      "id": "found-term-token",
+      "term": "Token",
+      "termJa": "トークン",
+      "meaning": "テキストを処理するための最小単位。単語、サブワード、文字など粒度は手法によって異なる。BPE（Byte Pair Encoding）やSentencePieceなどのトークナイザが使われる。",
+      "type": "theory",
+      "tags": ["nlp", "基礎"]
+    },
+    {
+      "id": "found-term-embedding",
+      "term": "Embedding",
+      "termJa": "埋め込み表現",
+      "meaning": "単語やトークンを固定長の実数ベクトルに変換する手法。意味的に近い単語はベクトル空間上で近くに配置される。Word2Vec、GloVe等が代表的。",
+      "type": "technique",
+      "tags": ["nlp", "基礎"]
+    },
+    {
+      "id": "found-term-vocabulary",
+      "term": "Vocabulary",
+      "termJa": "語彙",
+      "meaning": "モデルが認識できるトークンの集合。語彙サイズが大きいほど多様な表現が可能だが、計算コストも増加する。",
+      "type": "theory",
+      "tags": ["nlp", "基礎"]
+    },
+    {
+      "id": "found-term-parameter",
+      "term": "Parameter",
+      "termJa": "パラメータ",
+      "meaning": "モデルが学習によって調整する変数の総称。重みとバイアスを含む。GPT-3は約1750億パラメータ、GPT-4は推定数兆パラメータを持つ。",
+      "type": "theory",
+      "tags": ["モデル", "基礎"]
+    },
+    {
+      "id": "found-term-weight",
+      "term": "Weight",
+      "termJa": "重み",
+      "meaning": "ニューラルネットワークにおける結合の強さを表す数値。学習によって最適値に調整される。入力信号に乗じて次の層に伝達される。",
+      "type": "theory",
+      "tags": ["モデル", "基礎"]
+    },
+    {
+      "id": "found-term-bias",
+      "term": "Bias",
+      "termJa": "バイアス",
+      "meaning": "ニューラルネットワークの各ニューロンに加算される定数項。活性化関数の閾値を調整し、モデルの表現力を向上させる。",
+      "type": "theory",
+      "tags": ["モデル", "基礎"]
+    },
+    {
+      "id": "found-term-activation-function",
+      "term": "Activation Function",
+      "termJa": "活性化関数",
+      "meaning": "ニューロンの出力に非線形変換を加える関数。ReLU、Sigmoid、GELU等がある。非線形性によりモデルが複雑なパターンを学習可能になる。",
+      "type": "technique",
+      "tags": ["モデル", "基礎"]
+    },
+    {
+      "id": "found-term-epoch",
+      "term": "Epoch",
+      "termJa": "エポック",
+      "meaning": "訓練データ全体を1回通して学習する単位。複数エポックの学習でモデルの精度が向上するが、過学習のリスクもある。",
+      "type": "theory",
+      "tags": ["学習", "基礎"]
+    },
+    {
+      "id": "found-term-batch-size",
+      "term": "Batch Size",
+      "termJa": "バッチサイズ",
+      "meaning": "1回のパラメータ更新で使用するデータサンプル数。大きいほど安定した勾配推定が得られるが、メモリ使用量が増加する。",
+      "type": "theory",
+      "tags": ["学習", "基礎"]
+    },
+    {
+      "id": "found-term-learning-rate",
+      "term": "Learning Rate",
+      "termJa": "学習率",
+      "meaning": "パラメータ更新の幅を制御するハイパーパラメータ。大きすぎると発散し、小さすぎると収束が遅くなる。AdamやSGD等のオプティマイザと組み合わせて使用。",
+      "type": "theory",
+      "tags": ["学習", "基礎"]
+    },
+    {
+      "id": "found-term-loss-function",
+      "term": "Loss Function",
+      "termJa": "損失関数",
+      "meaning": "モデルの予測と正解との誤差を数値化する関数。交差エントロピー損失、MSE等がある。この値を最小化するようにパラメータが更新される。",
+      "type": "theory",
+      "tags": ["学習", "基礎"]
+    },
+    {
+      "id": "found-term-gradient-descent",
+      "term": "Gradient Descent",
+      "termJa": "勾配降下法",
+      "meaning": "損失関数の勾配（微分）を計算し、パラメータを勾配の逆方向に更新する最適化手法。SGD、Adam、AdaGrad等の変種がある。",
+      "type": "technique",
+      "tags": ["学習", "基礎"]
+    },
+    {
+      "id": "found-term-inference",
+      "term": "Inference",
+      "termJa": "推論",
+      "meaning": "学習済みモデルを使って新しい入力に対する予測を行うこと。学習（訓練）とは異なり、パラメータの更新は行わない。レイテンシやスループットが重要な指標となる。",
+      "type": "theory",
+      "tags": ["評価", "基礎"]
+    },
+    {
+      "id": "found-term-overfitting",
+      "term": "Overfitting",
+      "termJa": "過学習",
+      "meaning": "訓練データに過度に適合し、未知のデータに対する汎化性能が低下する現象。ドロップアウト、正則化、データ拡張等で対策する。",
+      "type": "theory",
+      "tags": ["評価", "基礎"]
+    },
+    {
+      "id": "found-term-fine-tuning",
+      "term": "Fine-tuning",
+      "termJa": "ファインチューニング",
+      "meaning": "事前学習済みモデルを特定のタスク向けに追加学習すること。全パラメータを更新するFull Fine-tuningと、一部のみ更新するLoRA等のパラメータ効率的手法がある。",
+      "type": "technique",
+      "tags": ["学習", "基礎"]
+    },
+    {
+      "id": "found-term-accuracy",
+      "term": "Accuracy",
+      "termJa": "精度",
+      "meaning": "全予測のうち正解した割合。分類タスクの基本的な評価指標だが、クラス不均衡時には不適切な場合がある。Precision、Recall、F1スコア等と併用する。",
+      "type": "metric",
+      "tags": ["評価", "基礎"]
+    }
+  ]
 }
