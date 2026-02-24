@@ -26,6 +26,7 @@ const selectedCategory = ref('architectures')
 const activeTab = ref('glossary')
 const highlightId = ref(null)
 const selectedNodeId = ref(null)
+const sidebarOpen = ref(false)
 
 const categoryData = computed(() => dataMap[selectedCategory.value])
 
@@ -53,6 +54,7 @@ async function jumpToTerm(termId) {
 
 async function handleTreeSelect({ type, id, categoryKey }) {
   selectedNodeId.value = id
+  sidebarOpen.value = false
 
   if (type === 'category') {
     selectedCategory.value = categoryKey
@@ -92,13 +94,17 @@ async function handleTreeSelect({ type, id, categoryKey }) {
 <template>
   <div class="app">
     <div class="app-layout">
-      <TreeSidebar
-        :dataMap="dataMap"
-        :selectedId="selectedNodeId"
-        @select="handleTreeSelect"
-      />
+      <div class="sidebar" :class="{ open: sidebarOpen }">
+        <TreeSidebar
+          :dataMap="dataMap"
+          :selectedId="selectedNodeId"
+          @select="handleTreeSelect"
+        />
+      </div>
+      <div class="overlay" v-if="sidebarOpen" @click="sidebarOpen = false"></div>
       <div class="main-area">
         <header class="app-header">
+          <button class="menu-btn" @click="sidebarOpen = !sidebarOpen">☰</button>
           <h1>AI Knowledge Note</h1>
         </header>
         <main class="main-content">
@@ -130,6 +136,10 @@ async function handleTreeSelect({ type, id, categoryKey }) {
   min-height: 100vh;
 }
 
+.sidebar {
+  flex-shrink: 0;
+}
+
 .main-area {
   flex: 1;
   min-width: 0;
@@ -151,5 +161,59 @@ async function handleTreeSelect({ type, id, categoryKey }) {
   max-width: 720px;
   margin: 0 auto;
   padding: 0 24px 32px;
+}
+
+.menu-btn {
+  display: none;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  padding: 4px 10px;
+  cursor: pointer;
+  color: #333;
+}
+
+.menu-btn:hover {
+  background: #f0f0f0;
+}
+
+.overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    z-index: 100;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+
+  .app-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 50;
+  }
 }
 </style>
