@@ -1,0 +1,472 @@
+# AI開発活用カテゴリ 実装計画
+
+> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+
+**Goal:** 開発プロセスの各フェーズでのAI活用を解説する新カテゴリ「AI開発活用」を追加する。
+
+**Architecture:** `data/ai-development.json` に6 Topic（記事）、12 Concept、18 Term を定義し、App.vue の dataMap に追加する。既存の記事ビュー基盤がそのまま利用できる。
+
+**Tech Stack:** Vue 3 + Vite、JSONデータ
+
+---
+
+### Task 1: ai-development.json を作成
+
+**Files:**
+- Create: `data/ai-development.json`
+
+**Step 1: JSONファイルを作成**
+
+以下の完全な内容で `data/ai-development.json` を作成する。
+
+```json
+{
+  "category": "ai-development",
+  "displayName": "AI開発活用",
+  "description": "ソフトウェア開発の各フェーズでAIを活用する考え方と手法。特定ツールに依存しない概念的な理解を目指す。",
+  "topics": [
+    {
+      "id": "aidev-topic-requirements",
+      "term": "Requirements Definition with AI",
+      "termJa": "要件定義でのAI活用",
+      "meaning": "顧客要望の構造化、要件の矛盾・曖昧さ検出など、要件定義フェーズでAIを活用する考え方。",
+      "article": {
+        "sections": [
+          {
+            "heading": "AIで要件を整理する",
+            "body": "顧客やステークホルダーからのヒアリング結果は、多くの場合自然言語で書かれた曖昧な文書です。AIの[[aidev-term-nlp|自然言語処理]]能力を活用することで、これらの文書から要件を構造化できます。[[aidev-term-prompt-engineering|プロンプトエンジニアリング]]によって、AIに「この文書から機能要件と非機能要件を分類して」と指示すれば、要件の初期整理を効率化できます。[[aidev-term-few-shot|Few-shot Learning]]の手法で、過去の要件定義書の例を数件提示すると、プロジェクトの文脈に沿った出力が得られやすくなります。",
+            "termRefs": ["aidev-term-nlp", "aidev-term-prompt-engineering", "aidev-term-few-shot"]
+          },
+          {
+            "heading": "要件の矛盾と曖昧さを検出する",
+            "body": "要件定義で最も厄介なのは、要件間の矛盾や曖昧な記述です。AIに要件一覧を入力し、「矛盾する要件はないか」「曖昧な表現はどこか」と問いかけることで、人間が見落としがちな問題を発見できます。ただし、AIの出力には[[aidev-term-hallucination|ハルシネーション]]のリスクがあります。存在しない矛盾を指摘したり、実際の矛盾を見逃す可能性があるため、AIの指摘は必ず人間が確認する必要があります。",
+            "termRefs": ["aidev-term-hallucination"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["aidev-concept-requirements-extraction", "aidev-concept-requirements-validation"]
+    },
+    {
+      "id": "aidev-topic-basic-design",
+      "term": "Basic Design with AI",
+      "termJa": "基本設計でのAI活用",
+      "meaning": "システム全体のアーキテクチャ設計や技術選定にAIを活用する考え方。",
+      "article": {
+        "sections": [
+          {
+            "heading": "アーキテクチャの探索",
+            "body": "基本設計では、システム全体の構造を決定します。AIに対して「このような要件を満たすアーキテクチャパターンを提案して」と[[aidev-term-chain-of-thought|Chain-of-Thought]]形式で段階的に考えさせることで、マイクロサービスかモノリスか、どのデータベースが適切かといった設計判断の検討材料を得られます。[[aidev-term-rag|RAG]]を活用し、社内の過去の設計書を参照させることで、組織固有のアーキテクチャ標準に沿った提案も可能です。",
+            "termRefs": ["aidev-term-chain-of-thought", "aidev-term-rag"]
+          },
+          {
+            "heading": "技術選定の比較検討",
+            "body": "技術選定では、複数の選択肢の比較が必要です。AIの[[aidev-term-context-window|コンテキストウィンドウ]]に各技術の特徴、プロジェクトの制約条件、チームのスキルセットを入力し、比較表や判断根拠を生成させることができます。ただし、AIの知識には学習時点のカットオフがあるため、最新のバージョン情報やライセンス変更は人間が確認する必要があります。",
+            "termRefs": ["aidev-term-context-window"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["aidev-concept-architecture-exploration", "aidev-concept-technology-comparison"]
+    },
+    {
+      "id": "aidev-topic-outline-design",
+      "term": "Outline Design with AI",
+      "termJa": "概要設計でのAI活用",
+      "meaning": "モジュール分割やインターフェース設計、既存コードの理解にAIを活用する考え方。",
+      "article": {
+        "sections": [
+          {
+            "heading": "モジュール分割とインターフェース設計",
+            "body": "概要設計では、システムをモジュールに分割し、モジュール間のインターフェースを定義します。AIに要件と基本設計の情報を与え、モジュール分割案やAPI定義を提案させることができます。[[aidev-term-ai-review|AIレビュー]]として、設計したインターフェース定義の整合性チェックを依頼することも有効です。ただし、入力情報が[[aidev-term-context-window|コンテキストウィンドウ]]を超える大規模システムでは、情報を分割して入力する工夫が必要です。",
+            "termRefs": ["aidev-term-ai-review", "aidev-term-context-window"]
+          },
+          {
+            "heading": "既存コードベースの理解",
+            "body": "既存システムの改修案件では、まず現在のコードを理解する必要があります。[[aidev-term-code-analysis|コード解析]]をAIに依頼し、モジュール構成やデータフローを可視化できます。[[aidev-term-embedding-search|エンベディング検索]]を使えば、関連するコード断片を意味的に検索することも可能です。「この関数の役割は何か」「このモジュール間の依存関係を説明して」といった質問で、大規模コードベースの把握を効率化できます。AIの解釈には[[aidev-term-hallucination|ハルシネーション]]のリスクがあるため、重要な理解はコードを直接確認して裏付けましょう。",
+            "termRefs": ["aidev-term-code-analysis", "aidev-term-embedding-search", "aidev-term-hallucination"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["aidev-concept-module-decomposition", "aidev-concept-codebase-understanding"]
+    },
+    {
+      "id": "aidev-topic-detailed-design",
+      "term": "Detailed Design with AI",
+      "termJa": "詳細設計でのAI活用",
+      "meaning": "クラス設計やロジック設計、擬似コード生成にAIを活用する考え方。",
+      "article": {
+        "sections": [
+          {
+            "heading": "ロジック設計と擬似コード",
+            "body": "詳細設計ではクラス図やシーケンス図、具体的なアルゴリズムを定義します。AIに[[aidev-term-code-generation|コード生成]]を依頼し、設計仕様から擬似コードやインターフェース定義を作成させることで、設計と実装のギャップを減らせます。[[aidev-term-chain-of-thought|Chain-of-Thought]]で段階的にロジックを組み立てさせると、複雑なアルゴリズムでも論理の飛躍が少ない設計が得られます。",
+            "termRefs": ["aidev-term-code-generation", "aidev-term-chain-of-thought"]
+          },
+          {
+            "heading": "AIの制約を意識した設計",
+            "body": "詳細設計でAIを活用する際は、[[aidev-term-token-limit|トークン制限]]を意識する必要があります。1つのクラスや関数が大きすぎると、AIが全体を把握できません。逆に言えば、AIが扱いやすい粒度で設計することは、人間にとっても読みやすい設計につながります。[[aidev-term-zero-shot|Zero-shot]]で指示が通る場合はそのまま、複雑な場合は[[aidev-term-few-shot|Few-shot Learning]]で類似の設計例を提示すると精度が上がります。",
+            "termRefs": ["aidev-term-token-limit", "aidev-term-zero-shot", "aidev-term-few-shot"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["aidev-concept-logic-design", "aidev-concept-pseudocode-generation"]
+    },
+    {
+      "id": "aidev-topic-unit-testing",
+      "term": "Unit Testing with AI",
+      "termJa": "単体テストでのAI活用",
+      "meaning": "テストケースの自動生成やカバレッジ向上にAIを活用する考え方。",
+      "article": {
+        "sections": [
+          {
+            "heading": "テストケースの自動生成",
+            "body": "単体テストはAI活用の恩恵が最も大きいフェーズの一つです。[[aidev-term-test-case-generation|テストケース生成]]として、実装コードをAIに入力し「このメソッドの正常系・異常系・境界値のテストケースを生成して」と依頼できます。[[aidev-term-prompt-engineering|プロンプトエンジニアリング]]で「カバレッジ100%を目指して」「境界値を重点的に」といった条件を加えると、より網羅的なテストが得られます。",
+            "termRefs": ["aidev-term-test-case-generation", "aidev-term-prompt-engineering"]
+          },
+          {
+            "heading": "テスト品質の向上",
+            "body": "生成されたテストの品質を検証するには[[aidev-term-mutation-testing|ミューテーションテスト]]が有効です。ソースコードに意図的な変更（ミューテーション）を加え、テストがそれを検出できるか確認します。AIが生成したテストで検出できないミューテーションがあれば、そのケースを追加するよう[[aidev-term-ai-review|AIレビュー]]に再度依頼することで、テストの品質を反復的に高められます。",
+            "termRefs": ["aidev-term-mutation-testing", "aidev-term-ai-review"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["aidev-concept-test-generation", "aidev-concept-coverage-improvement"]
+    },
+    {
+      "id": "aidev-topic-integration-testing",
+      "term": "Integration Testing with AI",
+      "termJa": "結合テストでのAI活用",
+      "meaning": "シナリオベースのテスト設計や回帰テストの効率化にAIを活用する考え方。",
+      "article": {
+        "sections": [
+          {
+            "heading": "シナリオベースのテスト設計",
+            "body": "結合テストでは、複数モジュールが連携する際の振る舞いを検証します。[[aidev-term-test-scenario-generation|テストシナリオ生成]]として、ユースケースや画面遷移図をAIに入力し、テストシナリオを網羅的に生成させることができます。AIは人間が見落としがちな例外パスやエッジケースの組み合わせを提案してくれます。[[aidev-term-ai-debugging|AIデバッグ]]では、テスト失敗時のログやスタックトレースをAIに分析させ、原因の特定を支援できます。",
+            "termRefs": ["aidev-term-test-scenario-generation", "aidev-term-ai-debugging"]
+          },
+          {
+            "heading": "回帰テストの効率化",
+            "body": "システム変更のたびに実行する回帰テストは、テスト数の増加とともに負担が増大します。[[aidev-term-auto-regression|自動回帰テスト]]にAIを組み合わせることで、変更の影響範囲を分析し、実行すべきテストの優先順位付けが可能です。[[aidev-term-code-analysis|コード解析]]で変更の影響を受けるモジュールを特定し、関連するテストケースを重点的に実行することで、テスト時間を短縮しつつ品質を確保できます。",
+            "termRefs": ["aidev-term-auto-regression", "aidev-term-code-analysis"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["aidev-concept-scenario-design", "aidev-concept-regression-efficiency"]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "aidev-concept-requirements-extraction",
+      "term": "Requirements Extraction & Structuring",
+      "termJa": "要件の抽出と整理",
+      "topicId": "aidev-topic-requirements",
+      "meaning": "自然言語で記述された要望や議事録から、機能要件・非機能要件を抽出し構造化するプロセス。AIの自然言語処理能力とプロンプト設計を組み合わせて効率化する。",
+      "relatedTermIds": ["aidev-term-nlp", "aidev-term-prompt-engineering", "aidev-term-few-shot"]
+    },
+    {
+      "id": "aidev-concept-requirements-validation",
+      "term": "Requirements Validation",
+      "termJa": "要件の検証と矛盾検出",
+      "topicId": "aidev-topic-requirements",
+      "meaning": "定義された要件間の矛盾、曖昧さ、欠落をAIで検出するプロセス。ハルシネーションのリスクを考慮し、AIの指摘は人間が必ず確認する。",
+      "relatedTermIds": ["aidev-term-hallucination"]
+    },
+    {
+      "id": "aidev-concept-architecture-exploration",
+      "term": "Architecture Exploration",
+      "termJa": "アーキテクチャの探索",
+      "topicId": "aidev-topic-basic-design",
+      "meaning": "要件に適したアーキテクチャパターンをAIに段階的に検討させるプロセス。Chain-of-ThoughtやRAGを活用して設計の選択肢を広げる。",
+      "relatedTermIds": ["aidev-term-chain-of-thought", "aidev-term-rag"]
+    },
+    {
+      "id": "aidev-concept-technology-comparison",
+      "term": "Technology Comparison",
+      "termJa": "技術選定の比較検討",
+      "topicId": "aidev-topic-basic-design",
+      "meaning": "複数の技術候補について、AIに比較表や判断根拠を生成させるプロセス。コンテキストウィンドウの容量を活かし、多角的な比較を行う。",
+      "relatedTermIds": ["aidev-term-context-window"]
+    },
+    {
+      "id": "aidev-concept-module-decomposition",
+      "term": "Module Decomposition Support",
+      "termJa": "モジュール分割の支援",
+      "topicId": "aidev-topic-outline-design",
+      "meaning": "システムのモジュール分割案やAPI定義をAIに提案させるプロセス。AIレビューで設計の整合性を検証する。",
+      "relatedTermIds": ["aidev-term-ai-review", "aidev-term-context-window"]
+    },
+    {
+      "id": "aidev-concept-codebase-understanding",
+      "term": "Codebase Understanding",
+      "termJa": "既存コードの理解",
+      "topicId": "aidev-topic-outline-design",
+      "meaning": "既存のコードベースをAIに解析・説明させ、モジュール構成やデータフローを把握するプロセス。エンベディング検索で関連コードを意味的に検索できる。",
+      "relatedTermIds": ["aidev-term-code-analysis", "aidev-term-embedding-search", "aidev-term-hallucination"]
+    },
+    {
+      "id": "aidev-concept-logic-design",
+      "term": "Logic Design Support",
+      "termJa": "ロジック設計の支援",
+      "topicId": "aidev-topic-detailed-design",
+      "meaning": "アルゴリズムやビジネスロジックの設計をAIに支援させるプロセス。コード生成やChain-of-Thoughtで段階的にロジックを構築する。",
+      "relatedTermIds": ["aidev-term-code-generation", "aidev-term-chain-of-thought"]
+    },
+    {
+      "id": "aidev-concept-pseudocode-generation",
+      "term": "Pseudocode Generation",
+      "termJa": "擬似コード生成",
+      "topicId": "aidev-topic-detailed-design",
+      "meaning": "設計仕様からAIに擬似コードやインターフェース定義を生成させるプロセス。トークン制限を意識した粒度で設計することが重要。",
+      "relatedTermIds": ["aidev-term-token-limit", "aidev-term-zero-shot", "aidev-term-few-shot"]
+    },
+    {
+      "id": "aidev-concept-test-generation",
+      "term": "Test Case Generation",
+      "termJa": "テストケースの自動生成",
+      "topicId": "aidev-topic-unit-testing",
+      "meaning": "実装コードからAIにテストケースを自動生成させるプロセス。正常系・異常系・境界値を網羅的にカバーする。",
+      "relatedTermIds": ["aidev-term-test-case-generation", "aidev-term-prompt-engineering"]
+    },
+    {
+      "id": "aidev-concept-coverage-improvement",
+      "term": "Coverage Improvement",
+      "termJa": "カバレッジ向上",
+      "topicId": "aidev-topic-unit-testing",
+      "meaning": "ミューテーションテストとAIレビューを組み合わせ、テストの品質を反復的に高めるプロセス。",
+      "relatedTermIds": ["aidev-term-mutation-testing", "aidev-term-ai-review"]
+    },
+    {
+      "id": "aidev-concept-scenario-design",
+      "term": "Scenario-Based Test Design",
+      "termJa": "シナリオベーステスト設計",
+      "topicId": "aidev-topic-integration-testing",
+      "meaning": "ユースケースや画面遷移図からAIにテストシナリオを生成させるプロセス。例外パスやエッジケースの網羅を支援する。",
+      "relatedTermIds": ["aidev-term-test-scenario-generation", "aidev-term-ai-debugging"]
+    },
+    {
+      "id": "aidev-concept-regression-efficiency",
+      "term": "Regression Test Efficiency",
+      "termJa": "回帰テスト効率化",
+      "topicId": "aidev-topic-integration-testing",
+      "meaning": "コード変更の影響範囲をAIで分析し、回帰テストの優先順位付けと実行効率化を図るプロセス。",
+      "relatedTermIds": ["aidev-term-auto-regression", "aidev-term-code-analysis"]
+    }
+  ],
+  "terms": [
+    {
+      "id": "aidev-term-prompt-engineering",
+      "term": "Prompt Engineering",
+      "termJa": "プロンプトエンジニアリング",
+      "meaning": "AIモデルから望む出力を得るために、入力（プロンプト）を設計・最適化する技術。指示の明確化、文脈の提供、出力形式の指定などが含まれる。開発の全フェーズで基盤となるスキル。",
+      "type": "technique",
+      "tags": ["基礎", "全フェーズ"]
+    },
+    {
+      "id": "aidev-term-rag",
+      "term": "RAG (Retrieval-Augmented Generation)",
+      "termJa": "検索拡張生成",
+      "meaning": "外部のドキュメントやデータベースから関連情報を検索し、その結果をプロンプトに含めてAIに回答させる手法。社内ドキュメントや過去の設計書を参照した回答が可能になる。",
+      "type": "technique",
+      "tags": ["設計", "情報検索"]
+    },
+    {
+      "id": "aidev-term-code-generation",
+      "term": "Code Generation",
+      "termJa": "コード生成",
+      "meaning": "自然言語の指示や設計仕様からAIがソースコードを自動生成する技術。擬似コード、テンプレートコード、完全な実装まで様々な粒度で活用できる。",
+      "type": "technique",
+      "tags": ["実装", "設計"]
+    },
+    {
+      "id": "aidev-term-ai-review",
+      "term": "AI Review",
+      "termJa": "AIレビュー",
+      "meaning": "コードや設計書をAIに読ませ、バグ、設計上の問題、ベストプラクティスからの逸脱を検出させる手法。人間のレビューを補完し、見落としを減らす。",
+      "type": "technique",
+      "tags": ["品質", "全フェーズ"]
+    },
+    {
+      "id": "aidev-term-test-case-generation",
+      "term": "Test Case Generation",
+      "termJa": "テストケース生成",
+      "meaning": "実装コードや仕様書からAIがテストケースを自動生成する技術。正常系・異常系・境界値を網羅的にカバーし、テスト設計の工数を削減する。",
+      "type": "technique",
+      "tags": ["テスト", "自動化"]
+    },
+    {
+      "id": "aidev-term-nlp",
+      "term": "Natural Language Processing",
+      "termJa": "自然言語処理",
+      "meaning": "人間の言語をコンピュータが理解・処理するための技術分野。要件定義では、自然言語で書かれた文書の解析、分類、要約に活用される。",
+      "type": "theory",
+      "tags": ["基礎", "要件定義"]
+    },
+    {
+      "id": "aidev-term-few-shot",
+      "term": "Few-shot Learning",
+      "termJa": "Few-shot学習",
+      "meaning": "AIに少数の例（2〜5件程度）を提示し、パターンを学ばせる手法。過去の要件定義書や設計書の例を示すことで、プロジェクト固有の文脈に沿った出力が得られる。",
+      "type": "technique",
+      "tags": ["プロンプト", "基礎"]
+    },
+    {
+      "id": "aidev-term-zero-shot",
+      "term": "Zero-shot Learning",
+      "termJa": "Zero-shot学習",
+      "meaning": "例を一切提示せず、指示文のみでAIにタスクを実行させる手法。単純なタスクや汎用的な知識で対応できる場合に有効。Few-shotより手軽だが精度は下がることがある。",
+      "type": "technique",
+      "tags": ["プロンプト", "基礎"]
+    },
+    {
+      "id": "aidev-term-chain-of-thought",
+      "term": "Chain-of-Thought",
+      "termJa": "思考連鎖",
+      "meaning": "AIに段階的な推論過程を明示させるプロンプト手法。「まず〜を分析し、次に〜を検討し…」と考えさせることで、複雑な設計判断でも論理の飛躍を防ぐ。",
+      "type": "technique",
+      "tags": ["プロンプト", "設計"]
+    },
+    {
+      "id": "aidev-term-context-window",
+      "term": "Context Window",
+      "termJa": "コンテキストウィンドウ",
+      "meaning": "AIモデルが一度に処理できるテキスト量の上限。設計書やコードを入力する際、この制限を意識して情報を分割・要約する必要がある。モデルにより数千〜数十万トークン。",
+      "type": "theory",
+      "tags": ["基礎", "制約"]
+    },
+    {
+      "id": "aidev-term-hallucination",
+      "term": "Hallucination",
+      "termJa": "ハルシネーション",
+      "meaning": "AIが事実と異なる情報をもっともらしく生成する現象。存在しないAPIを提案したり、誤った仕様を断言するリスクがある。AIの出力は必ず人間が検証する必要がある。",
+      "type": "theory",
+      "tags": ["リスク", "全フェーズ"]
+    },
+    {
+      "id": "aidev-term-code-analysis",
+      "term": "Code Analysis",
+      "termJa": "コード解析",
+      "meaning": "既存のソースコードをAIに読ませ、構造・依存関係・処理フローを分析させる技術。大規模コードベースの理解や、変更影響範囲の特定に活用する。",
+      "type": "technique",
+      "tags": ["設計", "テスト"]
+    },
+    {
+      "id": "aidev-term-embedding-search",
+      "term": "Embedding Search",
+      "termJa": "エンベディング検索",
+      "meaning": "テキストやコードをベクトル化し、意味的な類似度で検索する技術。キーワード一致ではなく、意味が近いコード断片やドキュメントを見つけられる。RAGの基盤技術。",
+      "type": "technique",
+      "tags": ["情報検索", "設計"]
+    },
+    {
+      "id": "aidev-term-token-limit",
+      "term": "Token Limit",
+      "termJa": "トークン制限",
+      "meaning": "AIモデルへの入力と出力の合計トークン数の上限。長大なコードや設計書を扱う際は、情報の取捨選択や分割が必要。設計粒度にも影響する制約。",
+      "type": "theory",
+      "tags": ["制約", "設計"]
+    },
+    {
+      "id": "aidev-term-mutation-testing",
+      "term": "Mutation Testing",
+      "termJa": "ミューテーションテスト",
+      "meaning": "ソースコードに意図的な小さな変更（ミューテーション）を加え、テストがその変更を検出できるか検証する手法。テストの品質（検出力）を評価する指標となる。",
+      "type": "technique",
+      "tags": ["テスト", "品質"]
+    },
+    {
+      "id": "aidev-term-test-scenario-generation",
+      "term": "Test Scenario Generation",
+      "termJa": "テストシナリオ生成",
+      "meaning": "ユースケースや画面遷移図からAIが結合テスト用のシナリオを生成する技術。正常フロー・異常フロー・エッジケースの組み合わせを網羅的に提案する。",
+      "type": "technique",
+      "tags": ["テスト", "自動化"]
+    },
+    {
+      "id": "aidev-term-ai-debugging",
+      "term": "AI Debugging",
+      "termJa": "AIデバッグ",
+      "meaning": "テスト失敗時のログ、スタックトレース、エラーメッセージをAIに分析させ、原因の特定と修正案の提示を支援する手法。問題の切り分けを効率化する。",
+      "type": "technique",
+      "tags": ["テスト", "デバッグ"]
+    },
+    {
+      "id": "aidev-term-auto-regression",
+      "term": "Automated Regression Testing",
+      "termJa": "自動回帰テスト",
+      "meaning": "システム変更後に既存機能が正常に動作するか自動検証するプロセス。AIによる変更影響分析と組み合わせ、テスト範囲の最適化と実行効率化を図る。",
+      "type": "technique",
+      "tags": ["テスト", "自動化"]
+    }
+  ]
+}
+```
+
+**Step 2: JSONを検証**
+
+```bash
+python3 -c "import json; d=json.load(open('data/ai-development.json')); print(f'Topics: {len(d[\"topics\"])}, Concepts: {len(d[\"concepts\"])}, Terms: {len(d[\"terms\"])}')"
+```
+
+Expected: `Topics: 6, Concepts: 12, Terms: 18`
+
+**Step 3: コミット**
+
+```bash
+git add data/ai-development.json
+git commit -m "feat: AI開発活用カテゴリのデータを作成（6記事・18用語）"
+```
+
+---
+
+### Task 2: App.vue に新カテゴリを登録
+
+**Files:**
+- Modify: `app/src/App.vue`
+
+**Step 1: import を追加**
+
+`app/src/App.vue` の import セクション（toolsData の import の後）に追加:
+
+```javascript
+import aiDevelopmentData from '@data/ai-development.json'
+```
+
+**Step 2: dataMap に追加**
+
+dataMap オブジェクトに追加:
+
+```javascript
+const dataMap = {
+  architectures: architecturesData,
+  foundations: foundationsData,
+  training: trainingData,
+  applications: applicationsData,
+  tools: toolsData,
+  'ai-development': aiDevelopmentData
+}
+```
+
+**Step 3: コミット**
+
+```bash
+git add app/src/App.vue
+git commit -m "feat: App.vue に AI開発活用カテゴリを登録"
+```
+
+---
+
+### Task 3: ビルド検証
+
+**Step 1: ビルド**
+
+```bash
+cd app && npm run build
+```
+
+Expected: エラーなしでビルド完了
+
+**Step 2: 確認チェックリスト**
+
+- [ ] 左ナビに「AI開発活用」カテゴリが表示される
+- [ ] 6つの Topic が展開できる
+- [ ] 各 Topic をクリックすると記事が表示される
+- [ ] 記事内の用語リンクをクリックすると右パネルでハイライトされる
+- [ ] 学習パスタブで6つの Topic のツリーが表示される
