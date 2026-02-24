@@ -233,6 +233,58 @@
         ]
       },
       "relatedConceptIds": ["aidev-concept-context-design", "aidev-concept-knowledge-management"]
+    },
+    {
+      "id": "aidev-topic-vscode-continue",
+      "term": "VSCode Continue Extension",
+      "termJa": "VSCode Continue拡張機能",
+      "meaning": "オープンソースのAIコーディングアシスタント拡張機能。複数のLLMプロバイダに対応し、チャット・自動補完・コード編集などの機能を提供する。",
+      "article": {
+        "sections": [
+          {
+            "heading": "Continueとは何か",
+            "body": "Continueは、VSCodeおよびJetBrains IDEで動作するオープンソースの[[aidev-term-ide-ai-integration|IDE AI統合]]拡張機能です。GitHub Copilotのような商用ツールと異なり、接続するAIモデルを自由に選択できるのが最大の特徴です。Claude、GPT、Gemini、ローカルLLM（Ollama経由）など、多様なモデルに対応しています。[[aidev-term-continue-extension|Continue]]は、チャット、[[aidev-term-inline-suggestion|インライン提案]]、コード編集、ターミナル操作など、開発ワークフロー全体をAIで支援します。オープンソースのため、企業のセキュリティポリシーに合わせたオンプレミス構成も可能です。",
+            "termRefs": ["aidev-term-ide-ai-integration", "aidev-term-continue-extension", "aidev-term-inline-suggestion"]
+          },
+          {
+            "heading": "Continueの主要機能と活用法",
+            "body": "Continueの主要機能は4つです。(1)[[aidev-term-chat-interface|チャットインターフェース]]：サイドパネルでコードについて質問、設計相談、デバッグ支援が可能。選択したコードを「@」メンションで参照できます。(2)[[aidev-term-tab-completion|タブ補完]]：コーディング中にAIが次のコードを予測し、Tabキーで受け入れる[[aidev-term-code-completion|コード補完]]機能。(3)インライン編集：コード内で直接AIに修正を依頼し、差分プレビューで変更を確認してから適用。(4)[[aidev-term-ai-agent-ide|エージェント]]モード：複数ファイルにまたがる変更を自律的に計画・実行するモード。タスクの複雑さに応じて機能を使い分けることが効果的です。",
+            "termRefs": ["aidev-term-chat-interface", "aidev-term-tab-completion", "aidev-term-code-completion", "aidev-term-ai-agent-ide"]
+          },
+          {
+            "heading": "Continueのカスタマイズとコンテキスト管理",
+            "body": "Continueの強みは高いカスタマイズ性です。[[aidev-term-context-provider|コンテキストプロバイダ]]機能で、コードベース・ドキュメント・URL・データベーススキーマなど、様々な情報源をAIに提供できます。`config.json`でモデル設定、プロンプトテンプレート、コンテキストプロバイダを定義し、プロジェクトに最適な[[aidev-term-context-engineering|コンテキストエンジニアリング]]を実現します。`.continuerules`ファイルでプロジェクト固有の[[aidev-term-custom-instructions|カスタム指示]]を定義すれば、チーム全員が同じルールでAIを活用できます。また、[[aidev-term-prompt-template|プロンプトテンプレート]]をスラッシュコマンドとして登録し、よく使う操作を1コマンドで実行することも可能です。",
+            "termRefs": ["aidev-term-context-provider", "aidev-term-context-engineering", "aidev-term-custom-instructions", "aidev-term-prompt-template"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["aidev-concept-continue-features", "aidev-concept-continue-customization"]
+    },
+    {
+      "id": "aidev-topic-vscode-ai",
+      "term": "VSCode AI Integration",
+      "termJa": "VSCodeでのAI連携",
+      "meaning": "VSCodeエコシステムにおけるAIツールの全体像。GitHub Copilot、Continue、各種拡張機能を組み合わせたAI駆動開発環境の構築手法。",
+      "article": {
+        "sections": [
+          {
+            "heading": "VSCodeのAIエコシステム",
+            "body": "VSCodeは現在、最もAI連携が進んだエディタの一つです。[[aidev-term-ide-ai-integration|IDE AI統合]]の代表例として、GitHub Copilotが[[aidev-term-code-completion|コード補完]]と[[aidev-term-chat-interface|チャット]]機能を提供し、[[aidev-term-continue-extension|Continue]]がオープンソースの代替として多様なモデルに対応しています。さらに、Cline、Roo Code、Cursor（VSCodeフォーク）など、多数のAIツールが競い合っており、開発者は用途に応じて最適なツールを選択できます。これらのツールは[[aidev-term-inline-suggestion|インライン提案]]、チャット、エージェント機能など、共通のパラダイムを持ちつつ、それぞれ独自の強みを持っています。",
+            "termRefs": ["aidev-term-ide-ai-integration", "aidev-term-code-completion", "aidev-term-chat-interface", "aidev-term-continue-extension", "aidev-term-inline-suggestion"]
+          },
+          {
+            "heading": "AI駆動開発ワークフロー",
+            "body": "VSCodeでのAI活用は、単なるコード補完にとどまりません。実際の開発ワークフローは以下のように構成できます。(1)設計フェーズ：[[aidev-term-chat-interface|チャット]]でアーキテクチャの相談や技術選定の検討。(2)実装フェーズ：[[aidev-term-tab-completion|タブ補完]]でコーディングを高速化し、複雑な実装は[[aidev-term-ai-agent-ide|エージェント]]に委任。(3)レビューフェーズ：[[aidev-term-ai-review|AIレビュー]]でコード品質をチェック。(4)テストフェーズ：[[aidev-term-test-case-generation|テストケース生成]]でテストコードを自動作成。(5)デバッグフェーズ：エラーメッセージやログをAIに分析させ、[[aidev-term-ai-debugging|AIデバッグ]]で原因を特定。各フェーズでAIツールを使い分けることで、開発全体の生産性が向上します。",
+            "termRefs": ["aidev-term-chat-interface", "aidev-term-tab-completion", "aidev-term-ai-agent-ide", "aidev-term-ai-review", "aidev-term-test-case-generation", "aidev-term-ai-debugging"]
+          },
+          {
+            "heading": "効果的なAI連携環境の構築",
+            "body": "AIツールの導入だけでは十分な効果は得られません。環境全体を[[aidev-term-context-engineering|コンテキストエンジニアリング]]の観点で整備することが重要です。まず、プロジェクトの[[aidev-term-custom-instructions|カスタム指示]]ファイル（CLAUDE.md、.cursorrules等）にコーディング規約・アーキテクチャ方針を記述し、AIの出力品質の基盤を作ります。次に、[[aidev-term-context-provider|コンテキストプロバイダ]]を設定してドキュメントやAPIスキーマをAIが参照可能にします。さらに、チームで共有する[[aidev-term-prompt-template|プロンプトテンプレート]]を用意し、コードレビュー・テスト生成・リファクタリングなど頻出タスクの品質を均一化します。AIツールはあくまで道具であり、その効果はプロジェクトの情報整備度に大きく左右されることを認識しましょう。",
+            "termRefs": ["aidev-term-context-engineering", "aidev-term-custom-instructions", "aidev-term-context-provider", "aidev-term-prompt-template"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["aidev-concept-vscode-ai-ecosystem", "aidev-concept-ai-dev-workflow"]
     }
   ],
   "concepts": [
@@ -395,6 +447,38 @@
       "topicId": "aidev-topic-context-engineering",
       "meaning": "設計書・用語集・意思決定記録をナレッジベースに蓄積し、RAGやグラウンディングを通じてAIに提供するプロセス。",
       "relatedTermIds": ["aidev-term-knowledge-base", "aidev-term-rag", "aidev-term-grounding"]
+    },
+    {
+      "id": "aidev-concept-continue-features",
+      "term": "Continue Core Features",
+      "termJa": "Continueの主要機能",
+      "topicId": "aidev-topic-vscode-continue",
+      "meaning": "チャット・タブ補完・インライン編集・エージェントの4つの主要機能を、タスクの複雑さに応じて使い分ける方法。複数モデルに対応し、オープンソースで高いカスタマイズ性を持つ。",
+      "relatedTermIds": ["aidev-term-continue-extension", "aidev-term-chat-interface", "aidev-term-tab-completion", "aidev-term-ai-agent-ide"]
+    },
+    {
+      "id": "aidev-concept-continue-customization",
+      "term": "Continue Customization",
+      "termJa": "Continueのカスタマイズ",
+      "topicId": "aidev-topic-vscode-continue",
+      "meaning": "config.jsonでのモデル設定、コンテキストプロバイダの構成、.continuerulesでのプロジェクトルール定義、スラッシュコマンドの登録など、Continueの環境をプロジェクトに最適化するプロセス。",
+      "relatedTermIds": ["aidev-term-context-provider", "aidev-term-custom-instructions", "aidev-term-prompt-template"]
+    },
+    {
+      "id": "aidev-concept-vscode-ai-ecosystem",
+      "term": "VSCode AI Ecosystem",
+      "termJa": "VSCode AIエコシステム",
+      "topicId": "aidev-topic-vscode-ai",
+      "meaning": "GitHub Copilot、Continue、Cline、Roo Code等、VSCode上で動作するAIツール群の全体像。各ツールの特徴と使い分けを理解する。",
+      "relatedTermIds": ["aidev-term-ide-ai-integration", "aidev-term-continue-extension", "aidev-term-code-completion", "aidev-term-inline-suggestion"]
+    },
+    {
+      "id": "aidev-concept-ai-dev-workflow",
+      "term": "AI-Driven Development Workflow",
+      "termJa": "AI駆動開発ワークフロー",
+      "topicId": "aidev-topic-vscode-ai",
+      "meaning": "設計・実装・レビュー・テスト・デバッグの各フェーズでAIツールを組み合わせて活用し、開発全体の生産性を向上させるワークフロー。",
+      "relatedTermIds": ["aidev-term-chat-interface", "aidev-term-ai-agent-ide", "aidev-term-ai-review", "aidev-term-context-engineering"]
     }
   ],
   "terms": [
@@ -605,6 +689,70 @@
       "meaning": "AIに提供する情報（コンテキスト）の選定・構造化・順序設計を行う技術。限られたコンテキストウィンドウの中で、最も効果的な情報の組み合わせを設計し、出力品質を最大化する。",
       "type": "technique",
       "tags": ["実践", "基礎"]
+    },
+    {
+      "id": "aidev-term-ide-ai-integration",
+      "term": "IDE AI Integration",
+      "termJa": "IDE AI統合",
+      "meaning": "エディタやIDEにAI機能を組み込み、コーディング、チャット、コード解析、テスト生成などを開発環境から直接利用可能にする技術。VSCode、JetBrains、Neovim等の主要エディタで利用できる。",
+      "type": "technique",
+      "tags": ["ツール", "開発環境"]
+    },
+    {
+      "id": "aidev-term-continue-extension",
+      "term": "Continue",
+      "termJa": "Continue拡張機能",
+      "meaning": "VSCodeおよびJetBrains IDE向けのオープンソースAIコーディングアシスタント。Claude、GPT、Gemini、ローカルLLM等の複数モデルに対応し、チャット・補完・エージェント機能を提供する。カスタマイズ性が高く、企業のオンプレミス利用にも対応。",
+      "type": "technique",
+      "tags": ["ツール", "拡張機能"]
+    },
+    {
+      "id": "aidev-term-code-completion",
+      "term": "AI Code Completion",
+      "termJa": "AIコード補完",
+      "meaning": "AIがコーディング中のコンテキスト（現在のファイル、開いているタブ、プロジェクト構造）を分析し、次に書くべきコードを予測・提案する機能。単語レベルから複数行のコードブロックまで補完できる。",
+      "type": "technique",
+      "tags": ["ツール", "実装"]
+    },
+    {
+      "id": "aidev-term-inline-suggestion",
+      "term": "Inline Suggestion",
+      "termJa": "インライン提案",
+      "meaning": "エディタのカーソル位置に直接AIの提案をゴーストテキストとして表示する機能。TabキーやショートカットキーでAccept/Rejectを即座に判断でき、コーディングのフローを中断しない。",
+      "type": "technique",
+      "tags": ["ツール", "UI"]
+    },
+    {
+      "id": "aidev-term-chat-interface",
+      "term": "IDE Chat Interface",
+      "termJa": "IDEチャットインターフェース",
+      "meaning": "IDE内のサイドパネルやインラインでAIと対話する機能。コードの説明、設計相談、バグ調査、リファクタリング提案など、自由形式のやりとりが可能。選択コードや@メンションでコンテキストを共有する。",
+      "type": "technique",
+      "tags": ["ツール", "UI"]
+    },
+    {
+      "id": "aidev-term-tab-completion",
+      "term": "Tab Completion",
+      "termJa": "タブ補完",
+      "meaning": "AIが提案するコードをTabキーで受け入れる操作パターン。インライン提案と組み合わせて使用し、コーディングのリズムを保ちながらAIの支援を受けられる。部分的な受け入れ（単語単位）も可能なツールが多い。",
+      "type": "technique",
+      "tags": ["ツール", "操作"]
+    },
+    {
+      "id": "aidev-term-ai-agent-ide",
+      "term": "AI Agent in IDE",
+      "termJa": "IDEエージェント",
+      "meaning": "IDE内でAIが自律的にタスクを計画・実行するモード。複数ファイルの編集、ターミナルコマンドの実行、テストの実行と修正を、人間の承認を得ながら一連の作業として遂行する。従来のコード補完やチャットより高度な自律性を持つ。",
+      "type": "technique",
+      "tags": ["ツール", "エージェント"]
+    },
+    {
+      "id": "aidev-term-context-provider",
+      "term": "Context Provider",
+      "termJa": "コンテキストプロバイダ",
+      "meaning": "AIに追加情報を提供する仕組み。コードベースのインデックス、ドキュメント、URL、データベーススキーマ、Git差分など、様々なソースからコンテキストを収集しプロンプトに注入する。Continue等のツールで拡張可能。",
+      "type": "technique",
+      "tags": ["ツール", "コンテキスト"]
     }
   ]
 }
