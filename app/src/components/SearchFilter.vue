@@ -1,15 +1,12 @@
 <script setup>
 defineProps({
   searchQuery: { type: String, default: '' },
-  selectedType: { type: String, default: 'all' },
-  categories: { type: Array, default: () => [] },
-  selectedCategory: { type: String, default: '' }
+  selectedType: { type: String, default: 'all' }
 })
 
 defineEmits([
   'update:searchQuery',
-  'update:selectedType',
-  'update:selectedCategory'
+  'update:selectedType'
 ])
 
 const types = [
@@ -24,17 +21,6 @@ const types = [
 
 <template>
   <div class="search-filter">
-    <div class="category-tabs">
-      <button
-        v-for="cat in categories"
-        :key="cat.value"
-        class="category-tab"
-        :class="{ active: selectedCategory === cat.value }"
-        @click="$emit('update:selectedCategory', cat.value)"
-      >
-        {{ cat.label }}
-      </button>
-    </div>
     <div class="filter-row">
       <input
         type="text"
@@ -57,35 +43,6 @@ const types = [
 <style scoped>
 .search-filter {
   margin-bottom: 16px;
-}
-
-.category-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.category-tab {
-  padding: 6px 14px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  background: #fff;
-  color: #555;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.category-tab:hover {
-  border-color: #6a1b9a;
-  color: #6a1b9a;
-}
-
-.category-tab.active {
-  background: #6a1b9a;
-  border-color: #6a1b9a;
-  color: #fff;
 }
 
 .filter-row {
