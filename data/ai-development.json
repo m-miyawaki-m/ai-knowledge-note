@@ -128,6 +128,111 @@
         ]
       },
       "relatedConceptIds": ["aidev-concept-scenario-design", "aidev-concept-regression-efficiency"]
+    },
+    {
+      "id": "aidev-topic-glossary",
+      "term": "Glossary-Driven Development",
+      "termJa": "用語集の構築と活用",
+      "meaning": "プロジェクト固有の用語集を作成し、AIの入力に活用することで出力品質と一貫性を高める手法。",
+      "article": {
+        "sections": [
+          {
+            "heading": "なぜ用語集がAI活用の鍵になるのか",
+            "body": "AIは汎用的な知識を持っていますが、プロジェクト固有の略語や業務用語は知りません。「顧客マスタ」「受注伝票」「承認フロー」といった業務用語をAIに説明なく使うと、一般的な解釈で処理され、意図と異なる出力になります。[[aidev-term-glossary-driven|用語集駆動開発]]では、プロジェクトの用語・略語・業務ルールを体系的に整理し、AIへの入力に常に含めます。これにより[[aidev-term-hallucination|ハルシネーション]]を抑制し、チーム全員が同じ文脈でAIを活用できるようになります。用語集は単なる辞書ではなく、AIの出力品質を左右する重要な開発資産です。"
+,
+            "termRefs": ["aidev-term-glossary-driven", "aidev-term-hallucination"]
+          },
+          {
+            "heading": "用語集をプロンプトで活用する",
+            "body": "用語集のAI活用には複数のパターンがあります。最も直接的なのは、[[aidev-term-prompt-template|プロンプトテンプレート]]に用語定義セクションを設け、毎回の指示に含める方法です。例えば「以下の用語定義に従ってください：顧客マスタ＝顧客の基本情報を管理するテーブル…」とプロンプトの冒頭に置きます。[[aidev-term-few-shot|Few-shot Learning]]と組み合わせ、用語を正しく使った出力例を数件提示すると効果的です。大量の用語がある場合は、[[aidev-term-rag|RAG]]で関連用語のみを動的に検索してプロンプトに注入する方法も有効です。また、[[aidev-term-grounding|グラウンディング]]として用語集を事実の根拠に使うことで、AIが独自の解釈を加えるリスクを低減できます。",
+            "termRefs": ["aidev-term-prompt-template", "aidev-term-few-shot", "aidev-term-rag", "aidev-term-grounding"]
+          },
+          {
+            "heading": "用語集の作り方と継続的な運用",
+            "body": "用語集は開発の初期フェーズで作成し、プロジェクトの進行に合わせて継続的に更新します。まず既存ドキュメントから業務用語を抽出し（この作業自体もAIに依頼可能）、定義・同義語・使い分けのルールを整理します。[[aidev-term-structured-output|構造化出力]]の形式（JSON、Markdown表など）で管理すると、プロンプトへの組み込みやツール連携が容易になります。新しい用語が登場したら都度追加し、定義が変わったら更新する。この用語集をチームの[[aidev-term-knowledge-base|ナレッジベース]]として共有すれば、メンバー間でAIの出力品質にばらつきがなくなります。",
+            "termRefs": ["aidev-term-structured-output", "aidev-term-knowledge-base"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["aidev-concept-glossary-creation", "aidev-concept-glossary-prompt-usage"]
+    },
+    {
+      "id": "aidev-topic-prompt-patterns",
+      "term": "Prompt Design Patterns",
+      "termJa": "プロンプト設計パターン",
+      "meaning": "開発タスクで繰り返し使える、効果的なプロンプトの設計パターンと実践手法。",
+      "article": {
+        "sections": [
+          {
+            "heading": "効果的なプロンプトの構造",
+            "body": "開発でAIに指示を出す際は、4つの要素を意識します。(1)役割設定：「あなたはJavaのシニアエンジニアです」のように専門性を指定。(2)文脈提供：関連するコード、設計書、用語集を含める。(3)指示：具体的に何をしてほしいかを明確にする。(4)出力形式：「Markdown表で」「JSONで」など[[aidev-term-structured-output|構造化出力]]の形式を指定する。この4要素を[[aidev-term-prompt-template|プロンプトテンプレート]]として定型化し、タスクごとに変数部分だけ差し替えると、安定した品質の出力が得られます。",
+            "termRefs": ["aidev-term-structured-output", "aidev-term-prompt-template"]
+          },
+          {
+            "heading": "開発タスク別のプロンプトパターン",
+            "body": "よく使うパターンをいくつか紹介します。「分析パターン」：コードや仕様書を与え「問題点を3つ挙げて、それぞれ根拠と改善案を示して」と[[aidev-term-chain-of-thought|Chain-of-Thought]]で段階的に分析させる。「変換パターン」：「このクラス図をAPIインターフェース定義に変換して」のように、あるドキュメント形式から別の形式への変換を依頼する。「レビューパターン」：「このコードを以下の観点でレビューして：セキュリティ、パフォーマンス、可読性」と観点を明示して[[aidev-term-ai-review|AIレビュー]]を依頼する。「生成パターン」：[[aidev-term-few-shot|Few-shot]]で類似の完成例を2-3件提示し、同じ形式での生成を依頼する。パターンを蓄積しチームで共有することで、AI活用の属人化を防げます。",
+            "termRefs": ["aidev-term-chain-of-thought", "aidev-term-ai-review", "aidev-term-few-shot"]
+          },
+          {
+            "heading": "プロンプトの改善サイクル",
+            "body": "最初から完璧なプロンプトは書けません。出力を見て調整を繰り返すことが重要です。AIの出力が期待と異なる場合、指示が曖昧だったのか、文脈が不足していたのか、出力形式が不明確だったのかを分析します。改善したプロンプトは[[aidev-term-knowledge-base|ナレッジベース]]に蓄積し、チームの資産として共有しましょう。[[aidev-term-hallucination|ハルシネーション]]が頻発する領域では、「不明な点は『不明』と回答してください」「推測する場合は『推測：』と明記してください」といった[[aidev-term-grounding|グラウンディング]]の指示を加えることが有効です。",
+            "termRefs": ["aidev-term-knowledge-base", "aidev-term-hallucination", "aidev-term-grounding"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["aidev-concept-prompt-structure", "aidev-concept-prompt-iteration"]
+    },
+    {
+      "id": "aidev-topic-rules-instructions",
+      "term": "Rules & Custom Instructions",
+      "termJa": "ルール・カスタム指示の活用",
+      "meaning": "システムプロンプトやプロジェクトルールファイルを使い、AIの振る舞いを恒常的に制御する手法。",
+      "article": {
+        "sections": [
+          {
+            "heading": "AIへの恒常的な指示とは",
+            "body": "毎回のプロンプトに同じ指示を書くのは非効率です。[[aidev-term-system-prompt|システムプロンプト]]や[[aidev-term-custom-instructions|カスタム指示]]の仕組みを使えば、プロジェクト全体に適用されるルールを一度定義するだけで済みます。例えばCLAUDE.mdや.cursorrules等のルールファイルに「コードはTypeScriptで書く」「変数名はcamelCaseを使う」「エラーメッセージは日本語にする」と定義しておけば、AIは常にこのルールに従います。これは人間の開発者にとってのコーディング規約と同じ位置づけで、AIとの協業における品質の基盤になります。",
+            "termRefs": ["aidev-term-system-prompt", "aidev-term-custom-instructions"]
+          },
+          {
+            "heading": "ルールファイルに何を書くべきか",
+            "body": "効果的なルールファイルには以下の要素を含めます。(1)プロジェクト概要：技術スタック、ディレクトリ構成、主要なライブラリ。(2)コーディング規約：命名規則、インデント、コメントルール。(3)アーキテクチャ方針：レイヤー構成、依存関係のルール、禁止パターン。(4)用語定義：プロジェクト固有の[[aidev-term-glossary-driven|用語集]]への参照。(5)品質基準：テストカバレッジ目標、セキュリティ要件。これらを[[aidev-term-structured-output|構造化]]された形式で記述し、AIが正確に解釈できるようにします。ルールが多すぎると[[aidev-term-context-window|コンテキストウィンドウ]]を圧迫するため、重要度に応じた取捨選択も必要です。",
+            "termRefs": ["aidev-term-glossary-driven", "aidev-term-structured-output", "aidev-term-context-window"]
+          },
+          {
+            "heading": "ルールの階層化と使い分け",
+            "body": "ルールは範囲に応じて階層化すると管理しやすくなります。全社レベル（セキュリティポリシー、共通コーディング規約）、プロジェクトレベル（技術スタック、アーキテクチャ方針）、タスクレベル（特定機能の実装方針）の3階層が一般的です。[[aidev-term-system-prompt|システムプロンプト]]に全社ルールを、プロジェクトのルールファイルにプロジェクトルールを、個々のプロンプトにタスクルールを配置します。この階層により、汎用的なルールの重複記述を避けつつ、各レベルで必要な指示を適切に伝えられます。ルールは定期的にレビューし、AIの出力品質に貢献しているか検証しましょう。",
+            "termRefs": ["aidev-term-system-prompt"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["aidev-concept-persistent-rules", "aidev-concept-rule-hierarchy"]
+    },
+    {
+      "id": "aidev-topic-context-engineering",
+      "term": "Context Engineering",
+      "termJa": "コンテキストエンジニアリング",
+      "meaning": "AIに提供する情報（コンテキスト）を戦略的に設計・管理し、出力品質を最大化する手法。",
+      "article": {
+        "sections": [
+          {
+            "heading": "コンテキストの設計原則",
+            "body": "[[aidev-term-context-engineering|コンテキストエンジニアリング]]とは、AIに「何を」「どの順で」「どの粒度で」伝えるかを戦略的に設計することです。[[aidev-term-context-window|コンテキストウィンドウ]]には限りがあるため、すべての情報を詰め込むことはできません。重要なのは情報の優先順位付けです。(1)直接関連するコード・仕様を最優先。(2)用語集やルールで文脈を補強。(3)参考情報は必要最小限に。情報が多すぎるとAIの注意が分散し、かえって出力品質が落ちます。「このタスクに必要十分な情報は何か」を常に問いかけましょう。",
+            "termRefs": ["aidev-term-context-engineering", "aidev-term-context-window"]
+          },
+          {
+            "heading": "ナレッジベースの構築と運用",
+            "body": "プロジェクトの知識を体系的に管理する[[aidev-term-knowledge-base|ナレッジベース]]は、AI活用の土台です。設計書、用語集、コーディング規約、過去の意思決定記録、よくある質問と回答をナレッジベースに蓄積します。[[aidev-term-rag|RAG]]と組み合わせれば、AIが質問に応じて関連するナレッジを自動検索し、根拠のある回答を生成できます。ナレッジベースの情報は[[aidev-term-grounding|グラウンディング]]の役割も果たし、AIが「知らないことを知らない」と判断する助けになります。ナレッジの鮮度管理も重要で、古い情報が残っているとAIが誤った前提で回答するリスクがあります。",
+            "termRefs": ["aidev-term-knowledge-base", "aidev-term-rag", "aidev-term-grounding"]
+          },
+          {
+            "heading": "実践的なコンテキスト管理テクニック",
+            "body": "日常の開発で使えるコンテキスト管理のテクニックを紹介します。「スコープの明示」：AIに作業対象のファイルやモジュールを明確に伝え、無関係な範囲に手を出させない。「段階的な情報提供」：最初に概要を伝え、AIの理解を確認してから詳細を追加する。「出力の再利用」：AIが生成した中間成果物（分析結果、設計案）を次のプロンプトのコンテキストとして活用する。「[[aidev-term-prompt-template|テンプレート]]のコンテキスト枠」：プロンプトテンプレートに「プロジェクト情報」「関連コード」「用語集」の記入枠を設け、毎回漏れなく必要な情報を含めるようにする。これらの工夫により、[[aidev-term-token-limit|トークン制限]]の中で最大限の効果を引き出せます。",
+            "termRefs": ["aidev-term-prompt-template", "aidev-term-token-limit"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["aidev-concept-context-design", "aidev-concept-knowledge-management"]
     }
   ],
   "concepts": [
@@ -226,6 +331,70 @@
       "topicId": "aidev-topic-integration-testing",
       "meaning": "コード変更の影響範囲をAIで分析し、回帰テストの優先順位付けと実行効率化を図るプロセス。",
       "relatedTermIds": ["aidev-term-auto-regression", "aidev-term-code-analysis"]
+    },
+    {
+      "id": "aidev-concept-glossary-creation",
+      "term": "Glossary Creation",
+      "termJa": "用語集の作成",
+      "topicId": "aidev-topic-glossary",
+      "meaning": "プロジェクト固有の業務用語・略語・ルールを体系的に整理し、AIの入力に活用できる形式で管理するプロセス。",
+      "relatedTermIds": ["aidev-term-glossary-driven", "aidev-term-structured-output", "aidev-term-knowledge-base"]
+    },
+    {
+      "id": "aidev-concept-glossary-prompt-usage",
+      "term": "Glossary Prompt Usage",
+      "termJa": "用語集のプロンプト活用",
+      "topicId": "aidev-topic-glossary",
+      "meaning": "用語集をプロンプトに組み込み、AIの出力の一貫性と正確性を高める手法。直接埋め込み、RAG検索、Few-shot例示などの方法がある。",
+      "relatedTermIds": ["aidev-term-prompt-template", "aidev-term-rag", "aidev-term-few-shot", "aidev-term-grounding"]
+    },
+    {
+      "id": "aidev-concept-prompt-structure",
+      "term": "Prompt Structure",
+      "termJa": "プロンプトの構造設計",
+      "topicId": "aidev-topic-prompt-patterns",
+      "meaning": "役割設定・文脈提供・指示・出力形式の4要素でプロンプトを構造化し、テンプレートとしてチームで共有するプロセス。",
+      "relatedTermIds": ["aidev-term-prompt-template", "aidev-term-structured-output"]
+    },
+    {
+      "id": "aidev-concept-prompt-iteration",
+      "term": "Prompt Iteration",
+      "termJa": "プロンプトの改善サイクル",
+      "topicId": "aidev-topic-prompt-patterns",
+      "meaning": "プロンプトを出力結果に基づいて反復的に改善し、ナレッジとして蓄積するプロセス。",
+      "relatedTermIds": ["aidev-term-knowledge-base", "aidev-term-hallucination", "aidev-term-grounding"]
+    },
+    {
+      "id": "aidev-concept-persistent-rules",
+      "term": "Persistent Rules",
+      "termJa": "恒常的なルール設定",
+      "topicId": "aidev-topic-rules-instructions",
+      "meaning": "システムプロンプトやルールファイルを使い、プロジェクト全体に適用されるAIへの指示を一元管理するプロセス。",
+      "relatedTermIds": ["aidev-term-system-prompt", "aidev-term-custom-instructions"]
+    },
+    {
+      "id": "aidev-concept-rule-hierarchy",
+      "term": "Rule Hierarchy",
+      "termJa": "ルールの階層化",
+      "topicId": "aidev-topic-rules-instructions",
+      "meaning": "全社・プロジェクト・タスクの3階層でルールを構造化し、適切なレベルで管理・適用するプロセス。",
+      "relatedTermIds": ["aidev-term-system-prompt", "aidev-term-glossary-driven", "aidev-term-context-window"]
+    },
+    {
+      "id": "aidev-concept-context-design",
+      "term": "Context Design",
+      "termJa": "コンテキストの設計",
+      "topicId": "aidev-topic-context-engineering",
+      "meaning": "AIに提供する情報の優先順位・順序・粒度を戦略的に設計し、限られたコンテキストウィンドウの中で出力品質を最大化するプロセス。",
+      "relatedTermIds": ["aidev-term-context-engineering", "aidev-term-context-window", "aidev-term-token-limit"]
+    },
+    {
+      "id": "aidev-concept-knowledge-management",
+      "term": "Knowledge Management",
+      "termJa": "ナレッジ管理",
+      "topicId": "aidev-topic-context-engineering",
+      "meaning": "設計書・用語集・意思決定記録をナレッジベースに蓄積し、RAGやグラウンディングを通じてAIに提供するプロセス。",
+      "relatedTermIds": ["aidev-term-knowledge-base", "aidev-term-rag", "aidev-term-grounding"]
     }
   ],
   "terms": [
@@ -372,6 +541,70 @@
       "meaning": "システム変更後に既存機能が正常に動作するか自動検証するプロセス。AIによる変更影響分析と組み合わせ、テスト範囲の最適化と実行効率化を図る。",
       "type": "technique",
       "tags": ["テスト", "自動化"]
+    },
+    {
+      "id": "aidev-term-glossary-driven",
+      "term": "Glossary-Driven Development",
+      "termJa": "用語集駆動開発",
+      "meaning": "プロジェクト固有の用語集を作成・維持し、AIへの全ての入力に用語定義を含めることで出力の一貫性と正確性を担保する開発手法。用語集はコードと同様にバージョン管理する。",
+      "type": "technique",
+      "tags": ["実践", "全フェーズ"]
+    },
+    {
+      "id": "aidev-term-system-prompt",
+      "term": "System Prompt",
+      "termJa": "システムプロンプト",
+      "meaning": "AIモデルに対して会話全体を通じて適用される初期指示。役割、制約、出力形式などを定義する。ユーザーのプロンプトより優先度が高く、AIの基本的な振る舞いを制御する。",
+      "type": "theory",
+      "tags": ["基礎", "ルール"]
+    },
+    {
+      "id": "aidev-term-custom-instructions",
+      "term": "Custom Instructions",
+      "termJa": "カスタム指示",
+      "meaning": "CLAUDE.md、.cursorrules、.github/copilot-instructions.md等のファイルを通じてAIツールにプロジェクト固有のルールを伝える仕組み。コーディング規約、技術スタック、禁止事項などを恒常的に適用できる。",
+      "type": "technique",
+      "tags": ["実践", "ルール"]
+    },
+    {
+      "id": "aidev-term-prompt-template",
+      "term": "Prompt Template",
+      "termJa": "プロンプトテンプレート",
+      "meaning": "繰り返し使うプロンプトの定型フォーマット。固定部分（役割設定、出力形式）と変数部分（対象コード、要件）を分離し、チームで共有することでAI活用の品質を均一化する。",
+      "type": "technique",
+      "tags": ["実践", "プロンプト"]
+    },
+    {
+      "id": "aidev-term-grounding",
+      "term": "Grounding",
+      "termJa": "グラウンディング",
+      "meaning": "AIの出力を事実や根拠に基づかせる技術。用語集、設計書、公式ドキュメントなどの信頼できる情報源を提供し、AIが根拠のない推測を行うリスクを低減する。ハルシネーション対策の基本手法。",
+      "type": "technique",
+      "tags": ["品質", "リスク管理"]
+    },
+    {
+      "id": "aidev-term-structured-output",
+      "term": "Structured Output",
+      "termJa": "構造化出力",
+      "meaning": "AIの出力をJSON、Markdown表、YAML等の構造化されたフォーマットで生成させる手法。後続の処理やツール連携が容易になり、出力の一貫性も向上する。",
+      "type": "technique",
+      "tags": ["実践", "プロンプト"]
+    },
+    {
+      "id": "aidev-term-knowledge-base",
+      "term": "Knowledge Base",
+      "termJa": "ナレッジベース",
+      "meaning": "プロジェクトの設計書、用語集、FAQ、意思決定記録等を体系的に蓄積・管理する仕組み。RAGの検索対象やグラウンディングの根拠として機能し、AIの出力品質の土台となる。",
+      "type": "technique",
+      "tags": ["実践", "情報管理"]
+    },
+    {
+      "id": "aidev-term-context-engineering",
+      "term": "Context Engineering",
+      "termJa": "コンテキストエンジニアリング",
+      "meaning": "AIに提供する情報（コンテキスト）の選定・構造化・順序設計を行う技術。限られたコンテキストウィンドウの中で、最も効果的な情報の組み合わせを設計し、出力品質を最大化する。",
+      "type": "technique",
+      "tags": ["実践", "基礎"]
     }
   ]
 }
