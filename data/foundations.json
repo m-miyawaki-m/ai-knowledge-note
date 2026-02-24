@@ -8,6 +8,20 @@
       "term": "基本用語",
       "termJa": "基本用語",
       "meaning": "AIの基本的な用語と概念を整理する",
+      "article": {
+        "sections": [
+          {
+            "heading": "テキストをAIが理解するまで",
+            "body": "AIがテキストを処理する第一歩は、文章を[[found-term-token|トークン]]という最小単位に分割することです。「今日は天気がいい」という文は、モデルによって「今日/は/天気/が/いい」のように分割されます。モデルが認識できるトークンの全体集合を[[found-term-vocabulary|語彙（Vocabulary）]]と呼びます。語彙サイズはモデルの表現力とコストのトレードオフで決まります。分割されたトークンは、次に[[found-term-embedding|埋め込み表現（Embedding）]]によって数値ベクトルに変換されます。意味が近い単語は、このベクトル空間上で近くに配置されます。",
+            "termRefs": ["found-term-token", "found-term-vocabulary", "found-term-embedding"]
+          },
+          {
+            "heading": "ニューラルネットワークの構成要素",
+            "body": "数値化されたデータを処理するのがニューラルネットワークです。ネットワークは大量の[[found-term-parameter|パラメータ]]を持ち、その中心となるのが[[found-term-weight|重み（Weight）]]と[[found-term-bias|バイアス（Bias）]]です。重みは入力信号の強さを調整し、バイアスは閾値を制御します。各ニューロンの出力には[[found-term-activation-function|活性化関数]]が適用され、非線形な変換が加わることで、モデルは複雑なパターンを学習できるようになります。",
+            "termRefs": ["found-term-parameter", "found-term-weight", "found-term-bias", "found-term-activation-function"]
+          }
+        ]
+      },
       "relatedConceptIds": ["found-concept-text-processing", "found-concept-model-components"]
     },
     {
@@ -15,6 +29,20 @@
       "term": "学習の仕組み",
       "termJa": "学習の仕組み",
       "meaning": "機械学習の学習プロセスに関する用語",
+      "article": {
+        "sections": [
+          {
+            "heading": "モデルはどうやって学ぶのか",
+            "body": "モデルの学習は、予測と正解の誤差を[[found-term-loss-function|損失関数]]で数値化し、その値を小さくする方向に[[found-term-parameter|パラメータ]]を更新する繰り返しです。更新には[[found-term-gradient-descent|勾配降下法]]が使われ、損失関数の勾配（微分値）を計算してパラメータを調整します。一度に処理するデータ量を[[found-term-batch-size|バッチサイズ]]、更新の幅を[[found-term-learning-rate|学習率]]と呼びます。訓練データ全体を1周する単位が[[found-term-epoch|エポック]]で、通常は数十〜数百エポックの学習を行います。",
+            "termRefs": ["found-term-loss-function", "found-term-parameter", "found-term-gradient-descent", "found-term-batch-size", "found-term-learning-rate", "found-term-epoch"]
+          },
+          {
+            "heading": "学習の先にあるもの",
+            "body": "学習が完了したモデルを使って新しいデータの予測を行うことを[[found-term-inference|推論（Inference）]]と呼びます。ただし、学習しすぎると訓練データだけに過度に適合する[[found-term-overfitting|過学習（Overfitting）]]が起こります。モデルの予測精度は[[found-term-accuracy|Accuracy]]などの指標で評価します。また、大規模モデルを特定のタスクに適応させる[[found-term-fine-tuning|ファインチューニング]]も広く使われており、少量のデータで高精度な専用モデルを作れます。",
+            "termRefs": ["found-term-inference", "found-term-overfitting", "found-term-accuracy", "found-term-fine-tuning"]
+          }
+        ]
+      },
       "relatedConceptIds": ["found-concept-learning-process", "found-concept-evaluation"]
     }
   ],
