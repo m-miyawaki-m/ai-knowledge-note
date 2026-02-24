@@ -5,7 +5,7 @@ defineProps({
 defineEmits(['update:activeTab'])
 
 const tabs = [
-  { value: 'glossary', label: '用語辞書' },
+  { value: 'glossary', label: '記事' },
   { value: 'learning-path', label: '学習パス' }
 ]
 </script>

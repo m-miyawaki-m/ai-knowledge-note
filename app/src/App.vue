@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed, watch, nextTick } from 'vue'
-import SearchFilter from './components/SearchFilter.vue'
 import TabNav from './components/TabNav.vue'
-import GlossaryTab from './components/GlossaryTab.vue'
+import ArticleView from './components/ArticleView.vue'
+import TermSidebar from './components/TermSidebar.vue'
 import LearningPathTab from './components/LearningPathTab.vue'
 import TreeSidebar from './components/TreeSidebar.vue'
 
@@ -20,38 +20,71 @@ const dataMap = {
   tools: toolsData
 }
 
-const searchQuery = ref('')
-const selectedType = ref('all')
 const selectedCategory = ref('architectures')
 const activeTab = ref('glossary')
-const highlightId = ref(null)
 const selectedNodeId = ref(null)
 const sidebarOpen = ref(false)
+const selectedTopicId = ref(null)
+const highlightTermId = ref(null)
+const termSidebarCollapsed = ref(true)
 
 const categoryData = computed(() => dataMap[selectedCategory.value])
 
-watch(selectedCategory, () => {
-  searchQuery.value = ''
-  selectedType.value = 'all'
-  activeTab.value = 'glossary'
-  highlightId.value = null
+// 現在選択中の Topic
+const selectedTopic = computed(() => {
+  if (!selectedTopicId.value || !categoryData.value?.topics) return null
+  return categoryData.value.topics.find(t => t.id === selectedTopicId.value) || null
 })
 
-async function jumpToTerm(termId) {
-  activeTab.value = 'glossary'
-  highlightId.value = termId
-  await nextTick()
-  const el = document.getElementById(`term-${termId}`)
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    el.classList.add('highlight')
-    setTimeout(() => {
-      el.classList.remove('highlight')
-      highlightId.value = null
-    }, 2000)
+// 記事に関連する用語一覧（termRefs から収集、重複排除）
+const articleTerms = computed(() => {
+  if (!selectedTopic.value?.article?.sections) return []
+  const allData = Object.values(dataMap)
+  const seenIds = new Set()
+  const terms = []
+
+  for (const section of selectedTopic.value.article.sections) {
+    for (const termId of (section.termRefs || [])) {
+      if (seenIds.has(termId)) continue
+      seenIds.add(termId)
+      // 全カテゴリから用語を検索
+      for (const data of allData) {
+        const found = (data.terms || []).find(t => t.id === termId)
+        if (found) {
+          terms.push(found)
+          break
+        }
+      }
+    }
   }
+  return terms
+})
+
+// カテゴリが変わったら Topic 選択をリセット
+watch(selectedCategory, () => {
+  activeTab.value = 'glossary'
+  highlightTermId.value = null
+  // 最初の Topic を自動選択
+  const topics = categoryData.value?.topics || []
+  selectedTopicId.value = topics.length ? topics[0].id : null
+})
+
+// 初期表示: 最初の Topic を選択
+const initialTopics = categoryData.value?.topics || []
+if (initialTopics.length) {
+  selectedTopicId.value = initialTopics[0].id
 }
 
+// 記事内の用語リンクをクリック
+function handleArticleTermClick(termId) {
+  highlightTermId.value = termId
+  // 2秒後にリセット
+  setTimeout(() => {
+    highlightTermId.value = null
+  }, 2000)
+}
+
+// ツリーナビからの選択
 async function handleTreeSelect({ type, id, categoryKey }) {
   selectedNodeId.value = id
   sidebarOpen.value = false
@@ -61,31 +94,40 @@ async function handleTreeSelect({ type, id, categoryKey }) {
     return
   }
 
-  // Switch to the correct category if needed
+  // カテゴリ切り替え
   if (selectedCategory.value !== categoryKey) {
     selectedCategory.value = categoryKey
+    await nextTick()
   }
 
-  activeTab.value = 'glossary'
-  await nextTick()
-
-  // Scroll to the selected element
-  let elementId = null
   if (type === 'topic') {
-    // Topics don't have a dedicated scroll target in GlossaryTab, just show the category
+    selectedTopicId.value = id
+    activeTab.value = 'glossary'
     return
-  } else if (type === 'concept') {
-    elementId = `concept-${id}`
-  } else if (type === 'term') {
-    elementId = `term-${id}`
   }
 
-  if (elementId) {
-    const el = document.getElementById(elementId)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      el.classList.add('highlight')
-      setTimeout(() => el.classList.remove('highlight'), 2000)
+  if (type === 'concept') {
+    // Concept が属する Topic を探して表示
+    const data = dataMap[categoryKey]
+    const concept = (data?.concepts || []).find(c => c.id === id)
+    if (concept?.topicId) {
+      selectedTopicId.value = concept.topicId
+      activeTab.value = 'glossary'
+    }
+    return
+  }
+
+  if (type === 'term') {
+    // Term が属する Topic を探して表示 + 右パネルハイライト
+    const data = dataMap[categoryKey]
+    for (const concept of (data?.concepts || [])) {
+      if ((concept.relatedTermIds || []).includes(id)) {
+        selectedTopicId.value = concept.topicId
+        activeTab.value = 'glossary'
+        await nextTick()
+        handleArticleTermClick(id)
+        return
+      }
     }
   }
 }
@@ -108,23 +150,28 @@ async function handleTreeSelect({ type, id, categoryKey }) {
           <h1>AI Knowledge Note</h1>
         </header>
         <main class="main-content">
-          <SearchFilter
-            v-model:searchQuery="searchQuery"
-            v-model:selectedType="selectedType"
-          />
           <TabNav v-model:activeTab="activeTab" />
-          <GlossaryTab
+          <ArticleView
             v-if="activeTab === 'glossary'"
+            :topic="selectedTopic"
             :categoryData="categoryData"
-            :searchQuery="searchQuery"
-            :selectedType="selectedType"
-            @jump-to-term="jumpToTerm"
+            @term-click="handleArticleTermClick"
           />
           <LearningPathTab
             v-if="activeTab === 'learning-path'"
             :categoryData="categoryData"
           />
         </main>
+      </div>
+      <div
+        class="term-panel"
+        v-if="activeTab === 'glossary'"
+      >
+        <TermSidebar
+          :terms="articleTerms"
+          :highlightTermId="highlightTermId"
+          v-model:collapsed="termSidebarCollapsed"
+        />
       </div>
     </div>
   </div>
@@ -146,10 +193,19 @@ async function handleTreeSelect({ type, id, categoryKey }) {
   overflow-y: auto;
 }
 
+.term-panel {
+  flex-shrink: 0;
+  width: 260px;
+  height: 100vh;
+  overflow-y: auto;
+  border-left: 1px solid #e0e0e0;
+  background: #fafafa;
+  position: sticky;
+  top: 0;
+}
+
 .app-header {
   padding: 16px 24px;
-  max-width: 720px;
-  margin: 0 auto;
 }
 
 .app-header h1 {
@@ -214,6 +270,15 @@ async function handleTreeSelect({ type, id, categoryKey }) {
     bottom: 0;
     background: rgba(0, 0, 0, 0.3);
     z-index: 50;
+  }
+
+  .term-panel {
+    width: auto;
+    height: auto;
+    position: static;
+    border-left: none;
+    border-top: 1px solid #e0e0e0;
+    overflow-y: visible;
   }
 }
 </style>
