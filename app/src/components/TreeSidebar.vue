@@ -11,37 +11,12 @@ defineEmits(['select'])
 
 const treeData = computed(() => {
   return Object.entries(props.dataMap).map(([key, data]) => {
-    const topics = (data.topics || []).map(topic => {
-      const concepts = (data.concepts || [])
-        .filter(c => c.topicId === topic.id)
-        .map(concept => {
-          const terms = (concept.relatedTermIds || [])
-            .map(termId => (data.terms || []).find(t => t.id === termId))
-            .filter(Boolean)
-            .map(term => ({
-              label: term.termJa || term.term,
-              type: 'term',
-              id: term.id,
-              categoryKey: key
-            }))
-
-          return {
-            label: concept.termJa || concept.term,
-            type: 'concept',
-            id: concept.id,
-            categoryKey: key,
-            children: terms.length ? terms : undefined
-          }
-        })
-
-      return {
-        label: topic.termJa || topic.term,
-        type: 'topic',
-        id: topic.id,
-        categoryKey: key,
-        children: concepts.length ? concepts : undefined
-      }
-    })
+    const topics = (data.topics || []).map(topic => ({
+      label: topic.termJa || topic.term,
+      type: 'topic',
+      id: topic.id,
+      categoryKey: key
+    }))
 
     return {
       label: data.displayName,
