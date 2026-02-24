@@ -47,9 +47,10 @@ const articleTerms = computed(() => {
     for (const termId of (section.termRefs || [])) {
       if (seenIds.has(termId)) continue
       seenIds.add(termId)
-      // 全カテゴリから用語を検索
+      // 全カテゴリから用語・概念を検索
       for (const data of allData) {
         const found = (data.terms || []).find(t => t.id === termId)
+          || (data.concepts || []).find(c => c.id === termId)
         if (found) {
           terms.push(found)
           break
@@ -76,11 +77,13 @@ if (initialTopics.length) {
 }
 
 // 記事内の用語リンクをクリック
+let highlightTimer = null
 function handleArticleTermClick(termId) {
+  if (highlightTimer) clearTimeout(highlightTimer)
   highlightTermId.value = termId
-  // 2秒後にリセット
-  setTimeout(() => {
+  highlightTimer = setTimeout(() => {
     highlightTermId.value = null
+    highlightTimer = null
   }, 2000)
 }
 
@@ -154,7 +157,6 @@ async function handleTreeSelect({ type, id, categoryKey }) {
           <ArticleView
             v-if="activeTab === 'glossary'"
             :topic="selectedTopic"
-            :categoryData="categoryData"
             @term-click="handleArticleTermClick"
           />
           <LearningPathTab
@@ -239,6 +241,10 @@ async function handleTreeSelect({ type, id, categoryKey }) {
 }
 
 @media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
   .sidebar {
     position: fixed;
     left: -250px;

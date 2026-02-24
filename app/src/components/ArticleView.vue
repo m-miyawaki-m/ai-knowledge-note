@@ -2,8 +2,7 @@
 import ArticleSection from './ArticleSection.vue'
 
 const props = defineProps({
-  topic: { type: Object, default: null },
-  categoryData: { type: Object, default: null }
+  topic: { type: Object, default: null }
 })
 
 const emit = defineEmits(['term-click'])
