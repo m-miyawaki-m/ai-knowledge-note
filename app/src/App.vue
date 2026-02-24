@@ -199,7 +199,7 @@ async function handleTreeSelect({ type, id, categoryKey }) {
 
 .term-panel {
   flex-shrink: 0;
-  width: 260px;
+  width: 520px;
   height: 100vh;
   overflow-y: auto;
   border-left: 1px solid #e0e0e0;
