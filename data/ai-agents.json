@@ -2,8 +2,175 @@
   "category": "ai-agents",
   "displayName": "AIエージェント",
   "description": "AIエージェントの基礎概念から実装、評価・運用まで体系的に学ぶ。",
-  "topics": [],
-  "concepts": [],
+  "topics": [
+    {
+      "id": "agent-topic-overview",
+      "term": "AI Agent Overview",
+      "termJa": "AIエージェントの概要",
+      "meaning": "AIエージェントの定義・特性、ビジネス状況、技術的な位置づけ、開発の選択肢を俯瞰する。",
+      "article": {
+        "sections": [
+          {
+            "heading": "AIエージェントとは",
+            "body": "[[agent-term-ai-agent|AIエージェント]]とは、LLMを頭脳として自律的にタスクを遂行するシステムです。単なるチャットボットがユーザーの質問に1回答えるだけなのに対し、エージェントは目標に向けて複数のステップを計画し、ツールを使い、結果を検証するループを繰り返します。エージェントの特性として、(1)自律性（人間の介入なしに行動できる）、(2)反応性（環境の変化に対応する）、(3)先見性（[[agent-term-planning|計画]]を立てて行動する）、(4)社会性（他のエージェントや人間と協調する）が挙げられます。これらの特性を全て備える必要はなく、タスクに応じて必要な特性を設計に反映します。",
+            "termRefs": ["agent-term-ai-agent", "agent-term-planning"]
+          },
+          {
+            "heading": "AIエージェントのビジネス状況と活用例",
+            "body": "AIエージェントはカスタマーサポート、データ分析、情報収集、コード生成支援など、幅広い業務で活用が進んでいます。従来のRPA（ロボティック・プロセス・オートメーション）が定型作業の自動化にとどまるのに対し、AIエージェントは非定型な判断を含む業務にも対応できます。企業ではまず社内業務（ヘルプデスク、レポート作成、議事録要約）から導入し、徐々に顧客向けサービスへ展開するパターンが多く見られます。ビジネスでの活用成功の鍵は、エージェントの適用範囲を明確に限定し、[[agent-term-human-in-loop|ヒューマンインザループ]]で人間の監督を組み込むことです。",
+            "termRefs": ["agent-term-human-in-loop"]
+          },
+          {
+            "heading": "技術的な位置づけ：LLMからAIエージェントへ",
+            "body": "LLMからAIエージェントまでには段階があります。(1)LLM単体：1回の入出力でテキスト生成。(2)LLM + プロンプト設計：[[aidev-term-prompt-engineering|プロンプトエンジニアリング]]で出力を制御。(3)LLM + ツール：[[agent-term-tool-use|ツール呼び出し]]で外部連携。(4)LLM + ツール + 計画：目標達成に向けた自律的な行動。(5)マルチエージェント：複数エージェントの協調。段階が上がるほど能力は増しますが、複雑性とリスクも増大します。エージェントの構築方法には「学習」と「推論」の2つのアプローチがあります。[[agent-term-agent-tuning|エージェントチューニング]]はモデル自体をエージェント行動に最適化する学習アプローチで、推論アプローチはプロンプト設計やワークフロー設計でエージェントを構築します。現在は推論アプローチが主流です。",
+            "termRefs": ["aidev-term-prompt-engineering", "agent-term-tool-use", "agent-term-agent-tuning"]
+          },
+          {
+            "heading": "AIエージェント開発の選択肢",
+            "body": "エージェントの構築には、(1)フルスクラッチ開発、(2)フレームワーク利用の2つの選択肢があります。代表的なフレームワークとして[[agent-term-langgraph|LangGraph]]（LangChain系、グラフベースのワークフロー定義）、CrewAI（マルチエージェントに特化）、AutoGen（Microsoft、マルチエージェントの会話設計）、OpenAI Agents SDK（OpenAI公式）などがあります。フレームワークを使う利点は開発速度の向上とベストプラクティスの適用ですが、懸念点もあります。抽象化によりデバッグが困難になること、フレームワークの更新に追従が必要なこと、特定のユースケースへの柔軟な対応が難しい場合があることです。プロジェクトの規模・要件・チームのスキルに応じて選択しましょう。",
+            "termRefs": ["agent-term-langgraph"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["agent-concept-agent-definition", "agent-concept-agent-business", "agent-concept-llm-to-agent", "agent-concept-framework-choice"]
+    },
+    {
+      "id": "agent-topic-architecture",
+      "term": "AI Agent Architecture",
+      "termJa": "AIエージェントの構成",
+      "meaning": "AIエージェントの内部構成要素（プロフィール、ツール、計画、自己修正、メモリ）とワークフローパターンを理解する。",
+      "article": {
+        "sections": [
+          {
+            "heading": "AIエージェントの内部構成",
+            "body": "[[agent-term-ai-agent|AIエージェント]]の内部は、大きく分けて5つの構成要素で成り立っています。(1)[[agent-term-profile|プロフィール]]：エージェントの役割・専門性の定義。(2)[[agent-term-tool-use|ツール呼び出し]]：外部システムとのインタラクション。(3)[[agent-term-planning|計画]]：タスクの分解と実行順序の決定。(4)[[agent-term-self-correction|自己修正]]：実行結果の検証と修正。(5)[[agent-term-memory|メモリ]]：経験と知識の蓄積。これらを[[agent-term-perception|知覚]]（環境からの入力受信）が支えます。エージェントの「環境」とは、ユーザーインターフェース、利用可能なツール群、アクセス可能なデータソースなど、エージェントが相互作用する全てを指します。",
+            "termRefs": ["agent-term-ai-agent", "agent-term-profile", "agent-term-tool-use", "agent-term-planning", "agent-term-self-correction", "agent-term-memory", "agent-term-perception"]
+          },
+          {
+            "heading": "プロフィール（Profile）",
+            "body": "[[agent-term-profile|プロフィール]]はエージェントの「人格」を定義するシステムプロンプトです。役割（「あなたはヘルプデスク担当のAIです」）、専門領域、行動指針、出力形式のルールなどを含みます。実装上の注意点として、プロフィールが長すぎるとLLMの注意が分散するため、最も重要な指示を先頭に配置すること。また、禁止事項よりも推奨行動を明記する方が効果的です。[[agent-term-perception|知覚]]の設計も重要で、ユーザー入力のフォーマット変換やマルチモーダル入力（画像・音声）の処理方法をプロフィール内で定義することがあります。",
+            "termRefs": ["agent-term-profile", "agent-term-perception"]
+          },
+          {
+            "heading": "ツール呼び出しとMCP",
+            "body": "[[agent-term-tool-use|ツール呼び出し]]はエージェントが外部世界に働きかける手段です。LLMが関数名と引数をJSONで出力し、ランタイムが実際の関数を実行して結果をLLMに返します。ツール設計で気を付けたいのは、(1)ツールの説明文を明確にする（LLMはこの説明でツール選択を判断する）、(2)引数の型とバリデーションを厳密にする、(3)ツール数を適度に保つ（多すぎると選択精度が下がる）ことです。[[agent-term-mcp|Model Context Protocol（MCP）]]は、ツール接続を標準化するプロトコルで、USBのように異なるツールを統一的なインターフェースで接続可能にします。MCPにより、ツールの再利用性と相互運用性が大幅に向上します。",
+            "termRefs": ["agent-term-tool-use", "agent-term-mcp"]
+          },
+          {
+            "heading": "計画（Planning）",
+            "body": "[[agent-term-planning|計画]]はエージェントのタスク分解と実行戦略の決定プロセスです。計画には2つのアプローチがあります。(1)事前計画：タスク全体を最初に分解し、サブタスクのリストを生成する。(2)動的計画：1ステップずつ実行し、結果に応じて次のステップを決定する。[[agent-term-plan-and-execute|Plan-and-Execute型]]は事前計画の代表で、計画フェーズと実行フェーズを明確に分離します。実装上の注意点として、計画が粗すぎると実行時に判断が曖昧になり、細かすぎると計画自体のコストが増大します。また、計画は固定ではなく、実行結果に応じて修正（再計画）できる設計にすることが重要です。",
+            "termRefs": ["agent-term-planning", "agent-term-plan-and-execute"]
+          },
+          {
+            "heading": "自己修正（Self-Correction）",
+            "body": "[[agent-term-self-correction|自己修正]]はエージェントが自身の出力を検証し、問題を修正するメカニズムです。具体的には、(1)出力の検証（生成したコードの構文チェック、回答の整合性確認）、(2)エラーのリトライ（APIエラー時の再試行、異なるアプローチでの再実行）、(3)[[agent-term-reflection|リフレクション]]（出力を振り返り品質を評価して改善する）の3つが主な手法です。実装上の注意点として、自己修正ループに上限回数を設けないと無限ループに陥るリスクがあります。また、修正の判断基準を明確にすること（何をもって「正しい」とするか）が重要です。",
+            "termRefs": ["agent-term-self-correction", "agent-term-reflection"]
+          },
+          {
+            "heading": "メモリ（Memory）",
+            "body": "[[agent-term-memory|メモリ]]はエージェントが情報を保持・活用する仕組みです。(1)短期メモリ：現在の会話やタスクのコンテキスト。LLMのコンテキストウィンドウに相当し、会話が長くなると古い情報が失われる。(2)長期メモリ：永続化された知識・経験。ベクトルデータベースやファイルに保存し、必要時に検索して活用する。実装上の注意点として、短期メモリの管理では重要な情報の要約や優先度付けが必要です。長期メモリでは、保存する情報の選別基準と検索の精度が品質を左右します。メモリは[[agent-term-arch-self-improvement|エージェントの自己改善]]にも活用でき、過去の成功・失敗パターンから学習することで継続的にパフォーマンスを向上させます。",
+            "termRefs": ["agent-term-memory", "agent-term-arch-self-improvement"]
+          },
+          {
+            "heading": "ワークフロー：シングルとマルチエージェント",
+            "body": "[[agent-term-single-agent|シングルエージェントワークフロー]]は1つのエージェントが全処理を担当します。コード生成→実行→検証のサイクルが典型例で、シンプルで管理しやすい反面、複雑なタスクには限界があります。実装上の注意点は、ループ回数の上限設定と、各ステップの入出力の型を明確にすることです。[[agent-term-multi-agent|マルチエージェントワークフロー]]は複数の専門エージェントが協調します。パターンとして、(1)オーケストレーター型：1つの統括エージェントが他を指揮、(2)議論型：エージェント同士が議論して合意形成、(3)階層型：上位が計画、下位が実行。実装上の注意点は、エージェント間の通信プロトコルの統一、デッドロック防止、全体の状態管理です。[[agent-term-ai-workflow|AIワークフロー]]はエージェントほど自律的ではなく、事前定義されたフローに沿って処理する仕組みで、予測可能性が高いのが特徴です。推論モデル（o1等）はエージェントの計画・推論フェーズで特に有効ですが、応答速度とコストのトレードオフを考慮する必要があります。",
+            "termRefs": ["agent-term-single-agent", "agent-term-multi-agent", "agent-term-ai-workflow"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["agent-concept-internal-architecture", "agent-concept-profile-design", "agent-concept-tool-design", "agent-concept-planning-strategy", "agent-concept-self-correction-pattern", "agent-concept-memory-design", "agent-concept-workflow-patterns"]
+    }
+  ],
+  "concepts": [
+    {
+      "id": "agent-concept-agent-definition",
+      "term": "Agent Definition & Characteristics",
+      "termJa": "エージェントの定義と特性",
+      "topicId": "agent-topic-overview",
+      "meaning": "AIエージェントの定義（自律的なタスク遂行システム）と4つの特性（自律性、反応性、先見性、社会性）の理解。",
+      "relatedTermIds": ["agent-term-ai-agent", "agent-term-planning"]
+    },
+    {
+      "id": "agent-concept-agent-business",
+      "term": "Agent Business Applications",
+      "termJa": "エージェントのビジネス活用",
+      "topicId": "agent-topic-overview",
+      "meaning": "カスタマーサポート、データ分析、情報収集などのビジネス活用パターンと、社内業務から顧客向けサービスへの展開戦略。",
+      "relatedTermIds": ["agent-term-ai-agent", "agent-term-human-in-loop"]
+    },
+    {
+      "id": "agent-concept-llm-to-agent",
+      "term": "From LLM to Agent",
+      "termJa": "LLMからエージェントへの段階",
+      "topicId": "agent-topic-overview",
+      "meaning": "LLM単体→プロンプト設計→ツール連携→計画付き自律行動→マルチエージェントという5段階の技術発展。学習アプローチと推論アプローチの違い。",
+      "relatedTermIds": ["agent-term-tool-use", "agent-term-agent-tuning"]
+    },
+    {
+      "id": "agent-concept-framework-choice",
+      "term": "Framework Selection",
+      "termJa": "フレームワークの選択",
+      "topicId": "agent-topic-overview",
+      "meaning": "LangGraph、CrewAI、AutoGen等のエージェントフレームワークの比較と、フルスクラッチとフレームワーク利用の判断基準。",
+      "relatedTermIds": ["agent-term-langgraph"]
+    },
+    {
+      "id": "agent-concept-internal-architecture",
+      "term": "Internal Architecture",
+      "termJa": "内部アーキテクチャ",
+      "topicId": "agent-topic-architecture",
+      "meaning": "プロフィール・ツール・計画・自己修正・メモリの5要素と知覚から成るエージェントの内部構成。",
+      "relatedTermIds": ["agent-term-ai-agent", "agent-term-profile", "agent-term-tool-use", "agent-term-planning", "agent-term-memory"]
+    },
+    {
+      "id": "agent-concept-profile-design",
+      "term": "Profile Design",
+      "termJa": "プロフィール設計",
+      "topicId": "agent-topic-architecture",
+      "meaning": "エージェントの役割・専門性・行動指針をシステムプロンプトとして定義する設計手法。知覚の設計を含む。",
+      "relatedTermIds": ["agent-term-profile", "agent-term-perception"]
+    },
+    {
+      "id": "agent-concept-tool-design",
+      "term": "Tool Design & MCP",
+      "termJa": "ツール設計とMCP",
+      "topicId": "agent-topic-architecture",
+      "meaning": "ツール呼び出しの実装方法、ツール説明文の設計、MCPによるツール接続の標準化。",
+      "relatedTermIds": ["agent-term-tool-use", "agent-term-mcp"]
+    },
+    {
+      "id": "agent-concept-planning-strategy",
+      "term": "Planning Strategy",
+      "termJa": "計画戦略",
+      "topicId": "agent-topic-architecture",
+      "meaning": "事前計画と動的計画の2つのアプローチ、Plan-and-Execute型の設計、再計画の仕組み。",
+      "relatedTermIds": ["agent-term-planning", "agent-term-plan-and-execute"]
+    },
+    {
+      "id": "agent-concept-self-correction-pattern",
+      "term": "Self-Correction Patterns",
+      "termJa": "自己修正パターン",
+      "topicId": "agent-topic-architecture",
+      "meaning": "出力検証、リトライ、リフレクションの3つの自己修正手法と、無限ループ防止の設計。",
+      "relatedTermIds": ["agent-term-self-correction", "agent-term-reflection"]
+    },
+    {
+      "id": "agent-concept-memory-design",
+      "term": "Memory Design",
+      "termJa": "メモリ設計",
+      "topicId": "agent-topic-architecture",
+      "meaning": "短期メモリと長期メモリの使い分け、情報の選別・保存・検索の設計、自己改善への活用。",
+      "relatedTermIds": ["agent-term-memory", "agent-term-arch-self-improvement"]
+    },
+    {
+      "id": "agent-concept-workflow-patterns",
+      "term": "Workflow Patterns",
+      "termJa": "ワークフローパターン",
+      "topicId": "agent-topic-architecture",
+      "meaning": "シングルエージェントとマルチエージェントのワークフロー設計パターン。オーケストレーター型、議論型、階層型。",
+      "relatedTermIds": ["agent-term-single-agent", "agent-term-multi-agent", "agent-term-ai-workflow"]
+    }
+  ],
   "terms": [
     {
       "id": "agent-term-ai-agent",
