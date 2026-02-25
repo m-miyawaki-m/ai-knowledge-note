@@ -8,6 +8,7 @@ const { articles, categories, articlesByCategory, getArticle } = useArticles()
 
 const selectedSlug = ref(null)
 const sidebarOpen = ref(false)
+const filterTag = ref('')
 
 // 初期表示: 最初のカテゴリの最初の記事を選択
 const firstCat = categories.value[0]
@@ -34,10 +35,11 @@ function handleNavigate(slug) {
 }
 
 function handleTagClick(tag) {
-  const matched = articles.filter(a => a.tags.includes(tag))
-  if (matched.length > 0) {
-    selectedSlug.value = matched[0].slug
-  }
+  filterTag.value = filterTag.value === tag ? '' : tag
+}
+
+function handleClearFilter() {
+  filterTag.value = ''
 }
 </script>
 
@@ -54,8 +56,10 @@ function handleTagClick(tag) {
       :categories="categories"
       :articles-by-category="articlesByCategory"
       :selected-slug="selectedSlug"
+      :filter-tag="filterTag"
       :class="{ open: sidebarOpen }"
       @select="handleSelect"
+      @clear-filter="handleClearFilter"
     />
 
     <!-- Overlay for mobile -->

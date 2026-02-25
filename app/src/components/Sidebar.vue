@@ -4,10 +4,11 @@ import { ref, computed, watch } from 'vue'
 const props = defineProps({
   categories: { type: Array, default: () => [] },
   articlesByCategory: { type: Object, default: () => ({}) },
-  selectedSlug: { type: String, default: '' }
+  selectedSlug: { type: String, default: '' },
+  filterTag: { type: String, default: '' }
 })
 
-const emit = defineEmits(['select'])
+const emit = defineEmits(['select', 'clear-filter'])
 
 const searchQuery = ref('')
 const expandedCategories = ref(new Set())
@@ -21,14 +22,23 @@ watch(() => props.categories, (cats) => {
 
 const filteredArticles = computed(() => {
   const q = searchQuery.value.toLowerCase()
-  if (!q) return props.articlesByCategory
+  const tag = props.filterTag
 
   const result = {}
   for (const [catSlug, articles] of Object.entries(props.articlesByCategory)) {
-    const filtered = articles.filter(a =>
-      a.title.toLowerCase().includes(q) ||
-      a.tags.some(t => t.toLowerCase().includes(q))
-    )
+    let filtered = articles
+    // タグフィルタ
+    if (tag) {
+      filtered = filtered.filter(a => a.tags.includes(tag))
+    }
+    // テキスト検索（タイトル + タグ + 本文）
+    if (q) {
+      filtered = filtered.filter(a =>
+        a.title.toLowerCase().includes(q) ||
+        a.tags.some(t => t.toLowerCase().includes(q)) ||
+        (a.rawContent && a.rawContent.toLowerCase().includes(q))
+      )
+    }
     if (filtered.length > 0) result[catSlug] = filtered
   }
   return result
@@ -60,6 +70,11 @@ function selectArticle(slug) {
         placeholder="記事を検索..."
         class="search-input"
       />
+    </div>
+
+    <div v-if="filterTag" class="sidebar-filter">
+      <span class="filter-label">タグ: {{ filterTag }}</span>
+      <button class="filter-clear" @click="emit('clear-filter')">✕</button>
     </div>
 
     <nav class="sidebar-nav">
@@ -134,6 +149,26 @@ function selectArticle(slug) {
 
 .search-input:focus {
   border-color: #6a1b9a;
+}
+
+.sidebar-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 16px;
+  background: #e8e0f0;
+  font-size: 12px;
+  color: #6a1b9a;
+}
+
+.filter-clear {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #6a1b9a;
+  padding: 0 4px;
 }
 
 .sidebar-nav {
