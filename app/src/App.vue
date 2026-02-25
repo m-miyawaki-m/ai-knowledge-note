@@ -12,6 +12,7 @@ import trainingData from '@data/training.json'
 import applicationsData from '@data/applications.json'
 import toolsData from '@data/tools.json'
 import aiDevelopmentData from '@data/ai-development.json'
+import aiAgentsData from '@data/ai-agents.json'
 
 const dataMap = {
   architectures: architecturesData,
@@ -19,7 +20,8 @@ const dataMap = {
   training: trainingData,
   applications: applicationsData,
   tools: toolsData,
-  'ai-development': aiDevelopmentData
+  'ai-development': aiDevelopmentData,
+  'ai-agents': aiAgentsData
 }
 
 const selectedCategory = ref('architectures')

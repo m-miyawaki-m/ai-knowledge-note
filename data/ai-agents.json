@@ -1,0 +1,329 @@
+{
+  "category": "ai-agents",
+  "displayName": "AIエージェント",
+  "description": "AIエージェントの基礎概念から実装、評価・運用まで体系的に学ぶ。",
+  "topics": [],
+  "concepts": [],
+  "terms": [
+    {
+      "id": "agent-term-ai-agent",
+      "term": "AI Agent",
+      "termJa": "AIエージェント",
+      "meaning": "LLMを頭脳として、外部ツールの利用・計画の立案・自己修正を自律的に行い、与えられた目標を達成するソフトウェアシステム。単なるチャットボットと異なり、環境を認識し、判断し、行動するループを持つ。",
+      "type": "theory",
+      "tags": ["基礎", "全章"]
+    },
+    {
+      "id": "agent-term-profile",
+      "term": "Agent Profile",
+      "termJa": "エージェントプロフィール",
+      "meaning": "エージェントの役割・性格・専門領域・行動指針をシステムプロンプトとして定義したもの。プロフィール設計がエージェントの振る舞いの質を大きく左右する。",
+      "type": "theory",
+      "tags": ["設計", "構成要素"]
+    },
+    {
+      "id": "agent-term-tool-use",
+      "term": "Tool Use / Function Calling",
+      "termJa": "ツール呼び出し",
+      "meaning": "LLMが外部のAPI・データベース・検索エンジン等のツールを呼び出す機能。LLMが「どのツールを」「どの引数で」呼ぶかをJSON形式で出力し、実行結果をLLMに返すことで、LLM単体ではできない操作を実現する。",
+      "type": "technique",
+      "tags": ["基礎", "構成要素"]
+    },
+    {
+      "id": "agent-term-planning",
+      "term": "Planning",
+      "termJa": "計画（プランニング）",
+      "meaning": "エージェントが目標達成のために、タスクを分解し実行順序を決定するプロセス。計画の質がエージェント全体の成否を左右する。事前計画と動的再計画の2種類がある。",
+      "type": "theory",
+      "tags": ["基礎", "構成要素"]
+    },
+    {
+      "id": "agent-term-self-correction",
+      "term": "Self-Correction",
+      "termJa": "自己修正",
+      "meaning": "エージェントが自身の出力や行動の結果を評価し、誤りを検出して修正するメカニズム。リトライ、出力の再検証、代替手段への切り替えなどの戦略がある。",
+      "type": "technique",
+      "tags": ["基礎", "構成要素"]
+    },
+    {
+      "id": "agent-term-memory",
+      "term": "Agent Memory",
+      "termJa": "エージェントメモリ",
+      "meaning": "エージェントが過去の経験・会話履歴・学習した知識を保持する仕組み。短期メモリ（現在の会話コンテキスト）と長期メモリ（永続化された知識・経験）に分かれる。",
+      "type": "theory",
+      "tags": ["基礎", "構成要素"]
+    },
+    {
+      "id": "agent-term-perception",
+      "term": "Perception",
+      "termJa": "知覚",
+      "meaning": "エージェントが環境からの情報（ユーザー入力、ツール実行結果、外部データ）を受け取り解釈するプロセス。マルチモーダル入力（テキスト・画像・音声）の処理も含む。",
+      "type": "theory",
+      "tags": ["基礎", "構成要素"]
+    },
+    {
+      "id": "agent-term-agent-tuning",
+      "term": "Agent-Tuning",
+      "termJa": "エージェントチューニング",
+      "meaning": "LLMをエージェントタスクに特化してファインチューニングする手法。ツール呼び出しの精度向上、計画能力の強化などを目的とし、エージェント行動のトレースデータで学習する。推論時のプロンプト設計とは異なるアプローチ。",
+      "type": "technique",
+      "tags": ["理論", "学習"]
+    },
+    {
+      "id": "agent-term-single-agent",
+      "term": "Single-Agent Workflow",
+      "termJa": "シングルエージェントワークフロー",
+      "meaning": "1つのエージェントが全ての処理を担当するワークフロー。シンプルで管理しやすいが、複雑なタスクでは限界がある。コード生成→実行→リフレクションのサイクルが典型例。",
+      "type": "theory",
+      "tags": ["設計", "ワークフロー"]
+    },
+    {
+      "id": "agent-term-multi-agent",
+      "term": "Multi-Agent Workflow",
+      "termJa": "マルチエージェントワークフロー",
+      "meaning": "複数の専門エージェントが協調してタスクを遂行するワークフロー。各エージェントに異なる役割を割り当て、連携させることで複雑な問題に対応する。オーケストレーター型、議論型、階層型などのパターンがある。",
+      "type": "theory",
+      "tags": ["設計", "ワークフロー"]
+    },
+    {
+      "id": "agent-term-chat-completions",
+      "term": "Chat Completions API",
+      "termJa": "チャット補完API",
+      "meaning": "OpenAI等が提供する、会話形式でLLMを呼び出すAPI。system/user/assistantのロールでメッセージを送り、AIの応答を得る。エージェント開発の基盤となるインターフェース。",
+      "type": "technique",
+      "tags": ["開発", "API"]
+    },
+    {
+      "id": "agent-term-reasoning-models",
+      "term": "Reasoning Models",
+      "termJa": "推論モデル",
+      "meaning": "o1、o3等の、内部で段階的な推論プロセスを実行するLLM。通常のモデルより複雑な論理的思考が可能で、計画立案や数学的推論に優れる。エージェントの計画フェーズでの活用が期待される。",
+      "type": "theory",
+      "tags": ["モデル", "理論"]
+    },
+    {
+      "id": "agent-term-structured-outputs",
+      "term": "Structured Outputs",
+      "termJa": "構造化出力",
+      "meaning": "LLMの出力をJSONスキーマ等の事前定義された形式に強制する機能。エージェントのツール呼び出しや計画出力で、パース可能な安定した出力を保証する。",
+      "type": "technique",
+      "tags": ["開発", "API"]
+    },
+    {
+      "id": "agent-term-prompt-caching",
+      "term": "Prompt Caching",
+      "termJa": "プロンプトキャッシング",
+      "meaning": "同一のプロンプトプレフィックスを再利用し、API呼び出しのコストと遅延を削減する技術。長いシステムプロンプトや大量のコンテキストを使うエージェントで特に有効。",
+      "type": "technique",
+      "tags": ["開発", "最適化"]
+    },
+    {
+      "id": "agent-term-code-interpreter",
+      "term": "Code Interpreter",
+      "termJa": "コードインタープリタ",
+      "meaning": "AIが生成したプログラムコードをサンドボックス環境で実行し、結果を取得する仕組み。データ分析、数値計算、ファイル変換など、LLMの計算能力を補完するツールとして使われる。",
+      "type": "technique",
+      "tags": ["ツール", "実行環境"]
+    },
+    {
+      "id": "agent-term-embedding-api",
+      "term": "Embedding API",
+      "termJa": "エンベディングAPI",
+      "meaning": "テキストをベクトル（数値の配列）に変換するAPI。意味的に近いテキスト同士が近いベクトルになる性質を利用し、セマンティック検索やRAGの基盤技術として使われる。",
+      "type": "technique",
+      "tags": ["開発", "API"]
+    },
+    {
+      "id": "agent-term-assistants-api",
+      "term": "Assistants API",
+      "termJa": "アシスタントAPI",
+      "meaning": "OpenAIが提供する、ステートフルなAIアシスタントを構築するためのAPI。スレッド管理、ファイル処理、Code Interpreter、Function Callingを統合的に提供する。",
+      "type": "technique",
+      "tags": ["開発", "API"]
+    },
+    {
+      "id": "agent-term-langgraph",
+      "term": "LangGraph",
+      "termJa": "LangGraph",
+      "meaning": "LangChainチームが開発した、グラフベースのエージェントワークフロー構築フレームワーク。ステートマシンとしてエージェントの状態遷移を定義し、条件分岐・ループ・人間の介入を含む複雑なワークフローを構築できる。",
+      "type": "technique",
+      "tags": ["フレームワーク", "開発"]
+    },
+    {
+      "id": "agent-term-mcp",
+      "term": "Model Context Protocol (MCP)",
+      "termJa": "モデルコンテキストプロトコル",
+      "meaning": "Anthropicが提唱する、AIモデルと外部ツール・データソースを標準的な方法で接続するオープンプロトコル。USBのように、様々なツールをエージェントに統一的なインターフェースで接続できる。",
+      "type": "technique",
+      "tags": ["プロトコル", "ツール"]
+    },
+    {
+      "id": "agent-term-plan-and-execute",
+      "term": "Plan-and-Execute",
+      "termJa": "計画実行型",
+      "meaning": "まず全体計画を立て、その計画に基づいてサブタスクを順次実行するエージェントパターン。計画フェーズと実行フェーズを分離することで、複雑なタスクを体系的に処理する。実行結果に応じた計画の修正（再計画）も含む。",
+      "type": "technique",
+      "tags": ["パターン", "設計"]
+    },
+    {
+      "id": "agent-term-reflection",
+      "term": "Reflection",
+      "termJa": "リフレクション",
+      "meaning": "エージェントが自身の出力を振り返り、品質を評価・改善するプロセス。コード生成後にエラーを検出して修正する、回答の正確性を自己チェックするなど。自己修正の具体的な実装手法の一つ。",
+      "type": "technique",
+      "tags": ["パターン", "品質"]
+    },
+    {
+      "id": "agent-term-e2b",
+      "term": "E2B (Code Sandbox)",
+      "termJa": "E2B（コードサンドボックス）",
+      "meaning": "AIが生成したコードを安全に実行するためのクラウドサンドボックス環境。ホストシステムから隔離された環境でコードを実行し、結果を取得する。データ分析エージェントでの活用が代表的。",
+      "type": "technique",
+      "tags": ["ツール", "実行環境"]
+    },
+    {
+      "id": "agent-term-langgraph-studio",
+      "term": "LangGraph Studio",
+      "termJa": "LangGraph Studio",
+      "meaning": "LangGraphで構築したエージェントワークフローを視覚的にデバッグ・テストするためのツール。グラフの状態遷移をリアルタイムで確認でき、各ノードの入出力を検査できる。",
+      "type": "technique",
+      "tags": ["ツール", "デバッグ"]
+    },
+    {
+      "id": "agent-term-local-llm",
+      "term": "Local LLM",
+      "termJa": "ローカルLLM",
+      "meaning": "Ollama等を使いローカル環境で動作させるLLM。API費用がかからず、データがローカルに留まるため機密性が高い。ただし、モデルサイズやGPUリソースによる性能の制約がある。",
+      "type": "technique",
+      "tags": ["開発", "モデル"]
+    },
+    {
+      "id": "agent-term-ai-workflow",
+      "term": "AI Workflow",
+      "termJa": "AIワークフロー",
+      "meaning": "LLMの呼び出しとツール実行を、事前定義されたフローに基づいて制御する仕組み。エージェントほど自律的ではないが、予測可能性が高く、特定の業務プロセスの自動化に適している。エージェントの構成要素としても使われる。",
+      "type": "theory",
+      "tags": ["設計", "ワークフロー"]
+    },
+    {
+      "id": "agent-term-evaluation",
+      "term": "Agent Evaluation",
+      "termJa": "エージェント評価",
+      "meaning": "AIエージェントの性能を定量的・定性的に評価するプロセス。エージェント能力（ツール使用、計画、記憶）と問題解決能力（タスクの完了度、正確性）の2軸で評価する。",
+      "type": "theory",
+      "tags": ["評価", "運用"]
+    },
+    {
+      "id": "agent-term-llm-judge",
+      "term": "LLM-as-a-Judge",
+      "termJa": "LLMによる評価",
+      "meaning": "LLM自体を評価者として使い、エージェントの出力品質を自動評価する手法。人間の評価と相関が高い場合が多く、大量のテストケースの評価を効率化できる。ただし、評価LLM自体のバイアスに注意が必要。",
+      "type": "technique",
+      "tags": ["評価", "手法"]
+    },
+    {
+      "id": "agent-term-task-domain-space",
+      "term": "Task Space / Domain Space",
+      "termJa": "タスク空間・ドメイン空間",
+      "meaning": "エージェントの評価における2つの次元。タスク空間はエージェントが解くべき問題の種類と複雑さ、ドメイン空間は業務領域固有の知識や制約を表す。評価設計時に両方をカバーすることが重要。",
+      "type": "theory",
+      "tags": ["評価", "理論"]
+    },
+    {
+      "id": "agent-term-error-analysis",
+      "term": "Error Analysis",
+      "termJa": "エラー分析",
+      "meaning": "エージェントの失敗パターンを体系的に分類・分析する手法。計画・推論エラー、行動・実行エラー、環境・知覚エラー、マルチエージェント連携エラーの4カテゴリで整理し、改善に活かす。",
+      "type": "technique",
+      "tags": ["評価", "改善"]
+    },
+    {
+      "id": "agent-term-agent-ux",
+      "term": "Agent UX",
+      "termJa": "エージェントUX",
+      "meaning": "AIエージェントとユーザーの間のインタラクション設計。エージェントの処理過程の可視化、信頼性の構築、ユーザーの承認・介入ポイントの設計など、従来のUI/UXとは異なる設計原則が求められる。",
+      "type": "theory",
+      "tags": ["運用", "UX"]
+    },
+    {
+      "id": "agent-term-prompt-injection",
+      "term": "Prompt Injection",
+      "termJa": "プロンプトインジェクション",
+      "meaning": "悪意のある入力によってエージェントの指示を上書きし、意図しない動作を引き起こす攻撃手法。間接的プロンプトインジェクション（外部データ経由）は特に防御が難しく、エージェントのセキュリティ設計で最重要課題の一つ。",
+      "type": "theory",
+      "tags": ["セキュリティ", "リスク"]
+    },
+    {
+      "id": "agent-term-agentops",
+      "term": "AgentOps",
+      "termJa": "AgentOps",
+      "meaning": "AIエージェントの運用を監視・管理するための概念・ツール群。エージェントの実行トレース、コスト追跡、パフォーマンス計測、異常検知などを包括的に行う。MLOpsのエージェント版。",
+      "type": "technique",
+      "tags": ["運用", "モニタリング"]
+    },
+    {
+      "id": "agent-term-langsmith",
+      "term": "LangSmith",
+      "termJa": "LangSmith",
+      "meaning": "LangChainチームが提供する、LLMアプリケーションの開発・テスト・モニタリングプラットフォーム。エージェントの実行トレースの可視化、プロンプトの管理、評価データセットの作成・実行が可能。",
+      "type": "technique",
+      "tags": ["ツール", "モニタリング"]
+    },
+    {
+      "id": "agent-term-prompt-flow-tracing",
+      "term": "Prompt Flow Tracing",
+      "termJa": "Prompt Flow トレーシング",
+      "meaning": "Microsoftが提供するPrompt flowのトレース機能。エージェントの各ステップ（LLM呼び出し、ツール実行、判断分岐）をDAGとして可視化し、ボトルネックの特定やデバッグに活用する。",
+      "type": "technique",
+      "tags": ["ツール", "モニタリング"]
+    },
+    {
+      "id": "agent-term-human-in-loop",
+      "term": "Human-in-the-Loop",
+      "termJa": "ヒューマンインザループ",
+      "meaning": "エージェントの処理フローに人間の判断・承認ポイントを組み込む設計パターン。重要な意思決定や不可逆な操作の前に人間の確認を挟むことで、エージェントの安全性と信頼性を確保する。",
+      "type": "technique",
+      "tags": ["設計", "安全性"]
+    },
+    {
+      "id": "agent-term-guardrails",
+      "term": "Guardrails",
+      "termJa": "ガードレール",
+      "meaning": "エージェントの行動を安全な範囲内に制限する仕組み。入力のフィルタリング、出力の検証、許可されたアクションのホワイトリスト、コスト上限の設定など、多層的な防御を構築する。",
+      "type": "technique",
+      "tags": ["安全性", "運用"]
+    },
+    {
+      "id": "agent-term-arch-self-improvement",
+      "term": "Agent Architecture Self-Improvement",
+      "termJa": "エージェントの自己改善",
+      "meaning": "エージェントが運用中の経験から学び、プロンプト・ツール選択・ワークフロー自体を改善する仕組み。メモリに蓄積された成功・失敗パターンを活用し、継続的にパフォーマンスを向上させる。",
+      "type": "technique",
+      "tags": ["運用", "改善"]
+    },
+    {
+      "id": "agent-term-role-playing",
+      "term": "Role-Playing Agent",
+      "termJa": "ロールプレイングエージェント",
+      "meaning": "特定の人物像（ペルソナ）の役割を演じるエージェント。マーケティングではターゲット顧客を模擬し、コンテンツの評価やフィードバックを行う。複数ペルソナのエージェントによるディスカッションも可能。",
+      "type": "technique",
+      "tags": ["パターン", "活用"]
+    },
+    {
+      "id": "agent-term-personalization",
+      "term": "Personalization Agent",
+      "termJa": "パーソナライズエージェント",
+      "meaning": "ユーザーの属性・行動履歴・嗜好に基づき、個別最適化された提案やコンテンツを生成するエージェント。会話を通じてユーザーの潜在ニーズを把握し、従来のルールベースを超えた柔軟なレコメンドを実現する。",
+      "type": "technique",
+      "tags": ["パターン", "活用"]
+    },
+    {
+      "id": "agent-term-rag-long-context",
+      "term": "RAG + Long Context",
+      "termJa": "RAGとロングコンテキスト",
+      "meaning": "RAG（検索拡張生成）とロングコンテキストモデルの使い分け・併用戦略。ロングコンテキストモデルは大量のテキストを直接入力できるが、コストが高い。RAGは必要な情報のみを検索するため効率的だが、検索精度に依存する。",
+      "type": "technique",
+      "tags": ["技術", "検索"]
+    }
+  ]
+}
