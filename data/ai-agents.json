@@ -239,6 +239,94 @@
         ]
       },
       "relatedConceptIds": ["agent-concept-role-playing-design", "agent-concept-personalization-design"]
+    },
+    {
+      "id": "agent-topic-evaluation",
+      "term": "Agent Evaluation",
+      "termJa": "AIエージェントの評価",
+      "meaning": "エージェントの能力と問題解決力を定量的に評価する手法。評価指標、LLM-as-a-Judge、エラー分析パターンを理解する。",
+      "article": {
+        "sections": [
+          {
+            "heading": "エージェント評価の2つの軸",
+            "body": "[[agent-term-evaluation|エージェント評価]]は2つの軸で考えます。(1)エージェント能力の評価：ツール使用の正確性、計画の適切さ、自己修正の有効性、メモリの活用度など、エージェントの構成要素ごとの性能を測る。(2)問題解決能力の評価：最終的なタスク達成度を測る。正答率、完了率、ユーザー満足度など。[[agent-term-task-domain-space|タスク空間とドメイン空間]]の概念も重要で、タスク空間は「何をさせるか」の多様性（簡単な質問→複雑な多段階タスク）、ドメイン空間は「どの業務領域か」の範囲（IT、法務、医療等）を表します。評価はこの2次元をバランスよくカバーする必要があります。",
+            "termRefs": ["agent-term-evaluation", "agent-term-task-domain-space"]
+          },
+          {
+            "heading": "評価指標",
+            "body": "エージェント能力の指標として、(1)ツール選択の正確性（正しいツールを正しい引数で呼べたか）、(2)計画の妥当性（サブタスクの分解が適切か）、(3)自己修正の成功率（エラーから回復できたか）。問題解決能力の指標として、(1)タスク完了率、(2)回答の正確性・完全性、(3)ユーザー満足度。運用指標として、(1)レイテンシ（応答時間）、(2)コスト（API呼び出し回数・トークン数）、(3)安全性（不適切な回答の発生率）。これらの指標を組み合わせて、エージェントの総合的な品質を評価します。",
+            "termRefs": ["agent-term-evaluation"]
+          },
+          {
+            "heading": "LLM-as-a-Judgeと評価の準備",
+            "body": "[[agent-term-llm-judge|LLM-as-a-Judge]]は、LLM自体を評価者として使い、エージェントの出力品質を自動評価する手法です。評価プロンプトに評価基準と被評価テキストを入力し、スコアや判定を出力させます。人間の評価と相関が高い場合が多く、大量のテストケースの評価を効率化できます。ただし、(1)評価LLM自体のバイアス（自分が生成した回答を高く評価しがち）、(2)評価基準の曖昧さ、(3)文化的・言語的な偏り、に注意が必要です。評価の準備として、代表的なテストケースの作成、期待出力（ゴールドスタンダード）の定義、評価プロンプトの設計とキャリブレーションを行います。",
+            "termRefs": ["agent-term-llm-judge"]
+          },
+          {
+            "heading": "エラー分析パターン",
+            "body": "[[agent-term-error-analysis|エラー分析]]はエージェントの失敗を体系的に分類し、改善に活かす手法です。(1)計画・推論エラー：タスクの分解が不適切、サブタスクの順序が誤り、不要なステップの追加。(2)行動・実行エラー：誤ったツールの選択、引数の誤り、APIエラーのハンドリング失敗。(3)環境・知覚エラー：ツール実行結果の誤解釈、ユーザー意図の取り違え、コンテキストの見落とし。(4)マルチエージェントエラー：エージェント間の情報伝達の齟齬、責任範囲の重複・隙間、デッドロック。各カテゴリの頻度と影響度を分析し、最も効果的な改善箇所を特定します。",
+            "termRefs": ["agent-term-error-analysis"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["agent-concept-evaluation-axes", "agent-concept-llm-judge", "agent-concept-error-patterns"]
+    },
+    {
+      "id": "agent-topic-production",
+      "term": "Agent in Production",
+      "termJa": "AIエージェントの活用",
+      "meaning": "エージェントのUX設計、リスク管理、モニタリング、継続的改善など、本番運用に必要な知識。",
+      "article": {
+        "sections": [
+          {
+            "heading": "AIエージェントとUX設計",
+            "body": "[[agent-term-agent-ux|エージェントUX]]は従来のUI/UXとは異なる設計原則が必要です。エージェントの実利用に至るまでのステップとして、(1)ユーザーがエージェントの能力範囲を理解する、(2)信頼関係を構築する（最初は簡単なタスクから）、(3)徐々に複雑なタスクを委任する。ユーザーとのタッチポイントの設計も重要で、(1)タスク投入時：何をしてほしいかの明確な入力手段、(2)処理中：何をしているかの可視化（進捗表示、使用ツールの表示）、(3)確認ポイント：重要な判断で[[agent-term-human-in-loop|ヒューマンインザループ]]の介入、(4)結果提示：根拠とともに結果を提示。エージェントの信頼性を高めるために、「わからないことはわからないと言う」「推測する場合はその旨を明示する」という透明性が重要です。",
+            "termRefs": ["agent-term-agent-ux", "agent-term-human-in-loop"]
+          },
+          {
+            "heading": "リスクと安全性",
+            "body": "エージェントのリスクは、(1)不正確な出力（[[aidev-term-hallucination|ハルシネーション]]による誤った回答や行動）、(2)セキュリティリスク（[[agent-term-prompt-injection|プロンプトインジェクション]]による指示の乗っ取り）、(3)過剰な行動（許可範囲を超えた操作）、(4)情報漏洩（機密データの不適切な利用）。攻撃手法として、直接的プロンプトインジェクション（ユーザー入力での攻撃）と間接的プロンプトインジェクション（外部データに仕込まれた攻撃）があります。対策として[[agent-term-guardrails|ガードレール]]の実装が不可欠です。入力のサニタイズ、出力のバリデーション、アクションのホワイトリスト、コスト上限の設定、人間の承認フローを多層的に組み合わせます。",
+            "termRefs": ["aidev-term-hallucination", "agent-term-prompt-injection", "agent-term-guardrails"]
+          },
+          {
+            "heading": "モニタリングツール",
+            "body": "エージェントの運用には継続的なモニタリングが不可欠です。(1)[[agent-term-agentops|AgentOps]]：エージェント専用のモニタリングプラットフォーム。実行トレース、コスト追跡、パフォーマンス計測を統合的に提供。(2)[[agent-term-prompt-flow-tracing|Prompt Flow Tracing]]：Microsoftが提供するトレーシングツール。エージェントの各ステップをDAGとして可視化し、ボトルネックの特定に活用。(3)[[agent-term-langsmith|LangSmith]]：LangChainエコシステムのモニタリング。実行トレースの保存・検索、評価データセットの管理、プロンプトのバージョン管理が可能。これらのツールで、レイテンシ異常、エラー率上昇、コスト急増などを早期に検出し、対応できます。",
+            "termRefs": ["agent-term-agentops", "agent-term-prompt-flow-tracing", "agent-term-langsmith"]
+          },
+          {
+            "heading": "継続的な精度改善",
+            "body": "エージェントの品質は、デプロイ後も継続的に改善する必要があります。[[agent-term-arch-self-improvement|エージェントの自己改善]]のアプローチとして、(1)[[agent-term-memory|メモリ]]を活用した推論の改善：過去の成功・失敗パターンをメモリに蓄積し、類似のタスクで参照する。(2)ツールやプロンプトの改善：モニタリングデータから頻出のエラーパターンを特定し、ツールの説明文やプロンプトを調整する。(3)エージェントアーキテクチャの改善：ワークフローの構造自体を見直す（ノードの追加・削除・順序変更）。改善サイクルの確立には、[[agent-term-evaluation|評価]]→分析→改善→再評価のループを継続的に回す体制が必要です。",
+            "termRefs": ["agent-term-arch-self-improvement", "agent-term-memory", "agent-term-evaluation"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["agent-concept-ux-design", "agent-concept-security", "agent-concept-monitoring", "agent-concept-continuous-improvement"]
+    },
+    {
+      "id": "agent-topic-case-studies",
+      "term": "Case Studies",
+      "termJa": "実用化の取り組み",
+      "meaning": "AIエージェントの実プロジェクトでの進め方、開発手法、人間との協働の在り方を各社の事例から学ぶ。",
+      "article": {
+        "sections": [
+          {
+            "heading": "AIエージェントプロジェクトの進め方",
+            "body": "AIエージェントの開発プロジェクトでは、(1)適用業務の選定：エージェントに適した業務の見極めが最重要。反復的でルールがある程度明確、かつ判断を伴う業務が向いている。完全に定型的な作業はRPAの方が適切で、極めて高度な判断が必要な業務はまだAIには難しい。(2)プロトタイプの早期検証：最小限のツールと簡単なワークフローでPoC（概念実証）を作成し、エージェントで解決可能かを確認する。(3)段階的な拡張：ツールの追加、ワークフローの複雑化、対応範囲の拡大を段階的に行う。(4)評価基準の事前定義：「何をもって成功とするか」をプロジェクト開始時に定義する。",
+            "termRefs": ["agent-term-ai-agent"]
+          },
+          {
+            "heading": "AIエージェントの開発手法",
+            "body": "実務でのエージェント開発では、(1)最小限のワークフローから始める：最初から複雑なマルチエージェントを組まず、[[agent-term-single-agent|シングルエージェント]]で基本機能を検証。(2)ツールを段階的に追加する：各ツールが正しく動作することを個別にテストしてから組み込む。(3)[[agent-term-evaluation|評価]]を自動化する：テストケースとLLM-as-a-Judgeを組み合わせ、変更のたびに品質を検証。(4)[[agent-term-guardrails|ガードレール]]を最初から組み込む：安全装置は後付けではなく設計時から考慮する。(5)ログとトレースを充実させる：[[agent-term-agentops|AgentOps]]等のモニタリングを初期から導入し、問題の早期発見を可能にする。",
+            "termRefs": ["agent-term-single-agent", "agent-term-evaluation", "agent-term-guardrails", "agent-term-agentops"]
+          },
+          {
+            "heading": "AIエージェントと人間の協働",
+            "body": "AIエージェントの実用化において最も重要なのは、エージェントと人間の適切な役割分担です。エージェントが得意なこと：大量の情報処理、定型的な判断、24時間稼働、一貫性のある対応。人間が得意なこと：文脈の深い理解、倫理的判断、創造的な問題解決、例外的な状況への対応。[[agent-term-human-in-loop|ヒューマンインザループ]]の設計では、エージェントの自信度に応じて人間への確認頻度を調整するアプローチが有効です。また、エージェントの判断を人間が監督する「人間によるレビュー」と、エージェントが人間の作業を支援する「AIアシスタント」の2つのモデルを業務に応じて使い分けることが重要です。",
+            "termRefs": ["agent-term-human-in-loop"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["agent-concept-project-approach", "agent-concept-human-collaboration"]
     }
   ],
   "concepts": [
@@ -433,6 +521,78 @@
       "topicId": "agent-topic-marketing",
       "meaning": "会話型レコメンドのマルチエージェント設計。プロファイル分析、レコメンド生成、メモリによる継続的パーソナライズ。",
       "relatedTermIds": ["agent-term-personalization", "agent-term-memory"]
+    },
+    {
+      "id": "agent-concept-evaluation-axes",
+      "term": "Evaluation Axes",
+      "termJa": "評価の2軸",
+      "topicId": "agent-topic-evaluation",
+      "meaning": "エージェント能力評価と問題解決能力評価の2軸。タスク空間とドメイン空間の概念。",
+      "relatedTermIds": ["agent-term-evaluation", "agent-term-task-domain-space"]
+    },
+    {
+      "id": "agent-concept-llm-judge",
+      "term": "LLM-as-a-Judge Methodology",
+      "termJa": "LLM評価手法",
+      "topicId": "agent-topic-evaluation",
+      "meaning": "LLMを評価者として活用する手法。評価プロンプトの設計、バイアスへの対処、テストケースの準備。",
+      "relatedTermIds": ["agent-term-llm-judge"]
+    },
+    {
+      "id": "agent-concept-error-patterns",
+      "term": "Error Analysis Patterns",
+      "termJa": "エラー分析パターン",
+      "topicId": "agent-topic-evaluation",
+      "meaning": "計画・推論、行動・実行、環境・知覚、マルチエージェントの4カテゴリのエラーパターンの分類と対策。",
+      "relatedTermIds": ["agent-term-error-analysis"]
+    },
+    {
+      "id": "agent-concept-ux-design",
+      "term": "Agent UX Design",
+      "termJa": "エージェントUX設計",
+      "topicId": "agent-topic-production",
+      "meaning": "エージェントとユーザーのタッチポイント設計、信頼構築、透明性の確保。",
+      "relatedTermIds": ["agent-term-agent-ux", "agent-term-human-in-loop"]
+    },
+    {
+      "id": "agent-concept-security",
+      "term": "Agent Security",
+      "termJa": "エージェントセキュリティ",
+      "topicId": "agent-topic-production",
+      "meaning": "プロンプトインジェクション対策、ガードレールの多層実装、アクション制限の設計。",
+      "relatedTermIds": ["agent-term-prompt-injection", "agent-term-guardrails"]
+    },
+    {
+      "id": "agent-concept-monitoring",
+      "term": "Agent Monitoring",
+      "termJa": "エージェントモニタリング",
+      "topicId": "agent-topic-production",
+      "meaning": "AgentOps、LangSmith、Prompt Flow Tracingなどのモニタリングツールの活用とトレース分析。",
+      "relatedTermIds": ["agent-term-agentops", "agent-term-langsmith", "agent-term-prompt-flow-tracing"]
+    },
+    {
+      "id": "agent-concept-continuous-improvement",
+      "term": "Continuous Improvement",
+      "termJa": "継続的改善",
+      "topicId": "agent-topic-production",
+      "meaning": "メモリ活用、プロンプト最適化、アーキテクチャ改善の3つの改善アプローチと評価サイクルの確立。",
+      "relatedTermIds": ["agent-term-arch-self-improvement", "agent-term-memory", "agent-term-evaluation"]
+    },
+    {
+      "id": "agent-concept-project-approach",
+      "term": "Project Approach",
+      "termJa": "プロジェクトの進め方",
+      "topicId": "agent-topic-case-studies",
+      "meaning": "適用業務の選定、プロトタイプ検証、段階的拡張、評価基準の事前定義など実プロジェクトの進め方。",
+      "relatedTermIds": ["agent-term-ai-agent", "agent-term-evaluation"]
+    },
+    {
+      "id": "agent-concept-human-collaboration",
+      "term": "Human-Agent Collaboration",
+      "termJa": "人間とエージェントの協働",
+      "topicId": "agent-topic-case-studies",
+      "meaning": "エージェントと人間の役割分担、ヒューマンインザループの設計、レビューモデルとアシスタントモデル。",
+      "relatedTermIds": ["agent-term-human-in-loop", "agent-term-guardrails"]
     }
   ],
   "terms": [
