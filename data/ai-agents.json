@@ -177,6 +177,68 @@
         ]
       },
       "relatedConceptIds": ["agent-concept-code-gen-cycle", "agent-concept-analysis-report", "agent-concept-sandbox-execution"]
+    },
+    {
+      "id": "agent-topic-research",
+      "term": "Research Agent",
+      "termJa": "情報収集エージェント",
+      "meaning": "arXiv論文探索を例に、マルチエージェントによる情報収集の自動化を学ぶ。メイン・調査・分析の3エージェント構成。",
+      "article": {
+        "sections": [
+          {
+            "heading": "情報収集タスクの課題",
+            "body": "リサーチ業務では、(1)調査対象の事前知識がないことが多い、(2)関連情報が広範囲に散在する、(3)情報の関連性の判断に専門知識が必要、という課題があります。エージェントによるアプローチでは、「キーワードの探索→情報の収集→内容の分析→追加調査の判断」という探索プロセスを自動化します。情報収集は1つのエージェントでは難しく、調査と分析を別の専門エージェントに分担させる[[agent-term-multi-agent|マルチエージェントワークフロー]]が有効です。",
+            "termRefs": ["agent-term-multi-agent"]
+          },
+          {
+            "heading": "マルチエージェント設計",
+            "body": "arXiv探索エージェントは3つのエージェントで構成されます。(1)メインエージェント（ResearchAgent）：全体の調査戦略を立て、調査・分析エージェントに指示を出し、最終レポートを統合するオーケストレーター。(2)論文調査エージェント（PaperSearchAgent）：arXiv APIやセマンティック検索で関連論文を探索。検索クエリの生成、結果のフィルタリング、重要度の判定を担当。(3)論文分析エージェント（PaperAnalyzerAgent）：取得した論文の要約、手法の分析、他の論文との比較を担当。各エージェントは[[agent-term-langgraph|LangGraph]]のサブグラフとして実装し、メインエージェントのグラフに組み込みます。",
+            "termRefs": ["agent-term-langgraph"]
+          },
+          {
+            "heading": "LangGraph Studioによる動作確認",
+            "body": "[[agent-term-langgraph-studio|LangGraph Studio]]を使うと、エージェントワークフローの動作を視覚的にデバッグできます。langgraph.jsonで設定を定義し、Studioを起動すると、グラフの各ノードの実行状態、入出力データ、状態遷移をリアルタイムで確認できます。特にマルチエージェントでは、どのエージェントがどの順序で呼ばれたか、エージェント間でどのような情報が渡されたかを追跡するのに非常に有用です。開発中のデバッグだけでなく、プロダクション環境でのトレース分析にも活用できます。",
+            "termRefs": ["agent-term-langgraph-studio"]
+          },
+          {
+            "heading": "課題と今後の発展性",
+            "body": "情報収集エージェントの課題として、(1)文献調査の「深さ」の限界：エージェントは幅広い探索は得意だが、特定トピックの深掘りは人間の専門知識が必要、(2)論文内の実験結果や図表の解釈が困難、(3)検索クエリの生成精度が結果の質を大きく左右する。改善の方向性として、ドメイン知識のプロフィールへの組み込み、マルチモーダル対応（図表の解析）、[[agent-term-memory|メモリ]]を活用した過去の調査結果の蓄積・再利用、ユーザーとの対話を通じた調査方針の動的調整（[[agent-term-human-in-loop|ヒューマンインザループ]]）が挙げられます。",
+            "termRefs": ["agent-term-memory", "agent-term-human-in-loop"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["agent-concept-research-multi-agent", "agent-concept-langgraph-debug"]
+    },
+    {
+      "id": "agent-topic-marketing",
+      "term": "Marketing Support Agent",
+      "termJa": "マーケティング支援エージェント",
+      "meaning": "ロールプレイングによる意思決定支援とパーソナライズ施策支援の2つのマルチエージェントパターンを学ぶ。",
+      "article": {
+        "sections": [
+          {
+            "heading": "マーケティング業務とAIエージェント",
+            "body": "マーケティング業務は、顧客の購買意思決定プロセス（認知→興味→検討→購入→推奨）の各段階に対してアプローチを設計します。課題として、(1)ターゲット顧客の反応予測が困難、(2)パーソナライズの精度とスケールの両立が難しい、(3)施策の効果検証に時間がかかる、があります。[[agent-term-ai-agent|AIエージェント]]は、ターゲット顧客のシミュレーション、コンテンツの最適化、個別レコメンドなどで活用できます。特に[[agent-term-multi-agent|マルチエージェント]]構成により、異なる視点からの分析や複数ペルソナのシミュレーションが可能になります。",
+            "termRefs": ["agent-term-ai-agent", "agent-term-multi-agent"]
+          },
+          {
+            "heading": "ロールプレイングによる意思決定支援",
+            "body": "[[agent-term-role-playing|ロールプレイングエージェント]]は、ターゲット顧客のペルソナを演じ、マーケティングコンテンツの評価やフィードバックを行います。マルチエージェント構成では、(1)コンテンツ作成エージェント：広告文やキャッチコピーを生成、(2)ペルソナエージェント（複数）：20代女性、40代ビジネスマン等の異なるペルソナでコンテンツを評価、(3)改善提案エージェント：ペルソナの評価を統合し、改善案を生成。この構成により、従来はフォーカスグループインタビュー等で時間をかけて行っていたコンテンツ評価を高速に回せます。ただし、AIペルソナの反応は実際の消費者と異なる場合があるため、最終判断は人間が行うべきです。",
+            "termRefs": ["agent-term-role-playing"]
+          },
+          {
+            "heading": "パーソナライズ施策支援",
+            "body": "[[agent-term-personalization|パーソナライズエージェント]]は、会話を通じてユーザーの嗜好を把握し、個別最適化されたレコメンドを提供します。従来のルールベース・協調フィルタリングと異なり、AIエージェントは「なぜこれを勧めるのか」を自然言語で説明でき、ユーザーとの対話を通じてリアルタイムに提案を調整できます。マルチエージェント構成では、(1)会話エージェント：ユーザーとの対話を管理、(2)プロファイル分析エージェント：対話から嗜好を抽出・構造化、(3)レコメンドエージェント：プロファイルと商品データに基づいて提案を生成。エージェントの[[agent-term-memory|メモリ]]に過去の対話や購買履歴を蓄積することで、セッションをまたいだ継続的なパーソナライズが実現します。",
+            "termRefs": ["agent-term-personalization", "agent-term-memory"]
+          },
+          {
+            "heading": "マルチエージェント連携のポイント",
+            "body": "マーケティング向けマルチエージェントの設計で重要なのは、(1)各エージェントの役割を明確に分離する：ペルソナエージェントはコンテンツ作成に関与しない、レコメンドエージェントはプロファイル分析に関与しない、(2)エージェント間の情報伝達を構造化する：[[agent-term-structured-outputs|構造化出力]]で評価結果やプロファイルを定型フォーマットにする、(3)全体のオーケストレーションを設計する：どのエージェントをどの順序で呼ぶか、結果をどう統合するか。[[agent-term-langgraph|LangGraph]]のサブグラフ機能を活用し、各エージェントを独立したグラフとして実装・テストし、メインのワークフローに組み込む方法が効果的です。",
+            "termRefs": ["agent-term-structured-outputs", "agent-term-langgraph"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["agent-concept-role-playing-design", "agent-concept-personalization-design"]
     }
   ],
   "concepts": [
@@ -339,6 +401,38 @@
       "topicId": "agent-topic-data-analysis",
       "meaning": "E2B等の隔離環境でAI生成コードを安全に実行する仕組み。セキュリティとリソース管理。",
       "relatedTermIds": ["agent-term-e2b", "agent-term-code-interpreter"]
+    },
+    {
+      "id": "agent-concept-research-multi-agent",
+      "term": "Research Multi-Agent Design",
+      "termJa": "調査マルチエージェント設計",
+      "topicId": "agent-topic-research",
+      "meaning": "メイン・調査・分析の3エージェント構成による情報収集の自動化。各エージェントの役割分担とオーケストレーション。",
+      "relatedTermIds": ["agent-term-multi-agent", "agent-term-langgraph"]
+    },
+    {
+      "id": "agent-concept-langgraph-debug",
+      "term": "LangGraph Debugging",
+      "termJa": "LangGraphデバッグ",
+      "topicId": "agent-topic-research",
+      "meaning": "LangGraph Studioを使ったワークフローの視覚的デバッグ。ノード実行状態、状態遷移、データフローの確認。",
+      "relatedTermIds": ["agent-term-langgraph-studio", "agent-term-langgraph"]
+    },
+    {
+      "id": "agent-concept-role-playing-design",
+      "term": "Role-Playing Agent Design",
+      "termJa": "ロールプレイング設計",
+      "topicId": "agent-topic-marketing",
+      "meaning": "ペルソナエージェントによるコンテンツ評価・フィードバック。複数ペルソナの議論によるマルチ視点分析。",
+      "relatedTermIds": ["agent-term-role-playing", "agent-term-multi-agent"]
+    },
+    {
+      "id": "agent-concept-personalization-design",
+      "term": "Personalization Agent Design",
+      "termJa": "パーソナライズエージェント設計",
+      "topicId": "agent-topic-marketing",
+      "meaning": "会話型レコメンドのマルチエージェント設計。プロファイル分析、レコメンド生成、メモリによる継続的パーソナライズ。",
+      "relatedTermIds": ["agent-term-personalization", "agent-term-memory"]
     }
   ],
   "terms": [
