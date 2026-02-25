@@ -79,6 +79,104 @@
         ]
       },
       "relatedConceptIds": ["agent-concept-internal-architecture", "agent-concept-profile-design", "agent-concept-tool-design", "agent-concept-planning-strategy", "agent-concept-self-correction-pattern", "agent-concept-memory-design", "agent-concept-workflow-patterns"]
+    },
+    {
+      "id": "agent-topic-dev-setup",
+      "term": "Development Setup",
+      "termJa": "開発準備",
+      "meaning": "AIエージェント開発に必要なAPI・ツール・フレームワークの基礎知識。Chat Completions APIからLangGraphまで。",
+      "article": {
+        "sections": [
+          {
+            "heading": "Chat Completions APIとモデルの基本",
+            "body": "エージェント開発の出発点は[[agent-term-chat-completions|Chat Completions API]]です。system（システム指示）、user（ユーザー入力）、assistant（AI応答）のロールでメッセージを送り、AIの応答を得ます。代表的なモデルとして、GPT-4o（高性能・マルチモーダル）、GPT-4o-mini（高速・低コスト）などがあり、タスクの要件に応じて選択します。[[agent-term-reasoning-models|推論モデル]]（o1、o3等）は内部で段階的な推論を行い、複雑な論理的思考が可能です。エージェントの計画フェーズでの活用が期待されますが、応答速度が遅くコストも高いため、計画など高度な推論が必要な場面に限定して使うのが効果的です。",
+            "termRefs": ["agent-term-chat-completions", "agent-term-reasoning-models"]
+          },
+          {
+            "heading": "構造化出力とPrompt Caching",
+            "body": "[[agent-term-structured-outputs|構造化出力]]は、LLMの出力をJSONスキーマに従った形式で強制する機能です。エージェントではツール呼び出しの引数や計画の出力で必須の機能で、パース失敗のリスクを排除します。[[agent-term-prompt-caching|プロンプトキャッシング]]は、同一のプロンプトプレフィックス（システムプロンプトや大きなコンテキスト）をキャッシュし、API呼び出しのコストと遅延を削減します。エージェントは同じシステムプロンプトで何度もAPIを呼ぶため、この最適化の効果が大きくなります。",
+            "termRefs": ["agent-term-structured-outputs", "agent-term-prompt-caching"]
+          },
+          {
+            "heading": "Function Callingとエージェント用ツール",
+            "body": "[[agent-term-tool-use|Function Calling]]はLLMが外部関数を呼び出す機能で、エージェントのツール利用の基盤です。APIリクエストにツールの定義（名前・説明・引数スキーマ）を含めると、LLMは適切なタイミングでツール呼び出しをJSON形式で返します。エージェントでよく使われるツールとして、(1)Web検索：最新情報の取得、(2)RAG（非公開情報の検索）：社内ドキュメントやマニュアルの検索に[[agent-term-embedding-api|Embedding API]]でベクトル化した情報を使う、(3)[[agent-term-code-interpreter|Code Interpreter]]：生成したコードの実行。[[agent-term-assistants-api|Assistants API]]はこれらを統合的に提供するOpenAIのAPIです。",
+            "termRefs": ["agent-term-tool-use", "agent-term-embedding-api", "agent-term-code-interpreter", "agent-term-assistants-api"]
+          },
+          {
+            "heading": "LangGraphによるワークフロー構築",
+            "body": "[[agent-term-langgraph|LangGraph]]はグラフベースのエージェントワークフロー構築フレームワークです。ステート（状態）を定義し、ノード（処理）とエッジ（遷移）でワークフローを構築します。条件分岐（conditional edge）により、LLMの判断結果に応じてフローを動的に切り替えられます。基本的な構築手順は、(1)State型の定義、(2)各ノード関数の実装、(3)グラフの構築（ノード追加→エッジ定義）、(4)コンパイル→実行。LangGraphの利点は、複雑なループや分岐を含むワークフローを宣言的に定義できること、状態のスナップショットによるデバッグのしやすさ、[[agent-term-human-in-loop|ヒューマンインザループ]]の組み込みが容易なことです。",
+            "termRefs": ["agent-term-langgraph", "agent-term-human-in-loop"]
+          },
+          {
+            "heading": "ローカルLLMとAPIの選択肢",
+            "body": "OpenAI以外にも、Anthropic（Claude）、Google（Gemini）、Mistral等のAPIが利用可能です。[[agent-term-local-llm|ローカルLLM]]はOllama等を使いローカル環境で動作させる選択肢で、API費用がかからず、データがローカルに留まるため機密性が高いのが利点です。ただし、モデルサイズが大きいほど高性能なGPUが必要で、クラウドAPIのモデルと比較すると性能面で劣る場合があります。エージェント開発では、計画や複雑な推論にはクラウドの高性能モデル、繰り返しの簡単なタスクにはローカルLLMという使い分けも有効です。",
+            "termRefs": ["agent-term-local-llm"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["agent-concept-api-fundamentals", "agent-concept-function-calling", "agent-concept-langgraph-basics"]
+    },
+    {
+      "id": "agent-topic-helpdesk",
+      "term": "Helpdesk Support Agent",
+      "termJa": "ヘルプデスク支援エージェント",
+      "meaning": "Plan-and-Execute型エージェントで社内ヘルプデスク業務を支援する実践例。計画→ツール選択→実行→修正のサイクル。",
+      "article": {
+        "sections": [
+          {
+            "heading": "ヘルプデスク業務の課題とAIエージェントの適用",
+            "body": "ヘルプデスク業務では、問い合わせに対してマニュアルや過去のQAを検索し、回答を作成する一連のフローがあります。課題として、(1)マニュアルが膨大で必要な情報を探すのに時間がかかる、(2)過去のQAが散在しており再利用が難しい、(3)回答品質が担当者のスキルに依存する、があります。[[agent-term-ai-agent|AIエージェント]]は、質問の分析→情報検索→回答生成を自律的に行い、担当者の負担を軽減します。単純なRAGと異なり、複数のサブタスクに分解して段階的に回答を組み立てる点がエージェントの強みです。",
+            "termRefs": ["agent-term-ai-agent"]
+          },
+          {
+            "heading": "Plan-and-Execute型エージェントの設計",
+            "body": "[[agent-term-plan-and-execute|Plan-and-Execute型]]は、まずユーザーの質問を分析してサブタスクの計画を立て、次にサブタスクを順次実行するパターンです。計画フェーズでは「この質問に答えるには何を調べる必要があるか」を分解します。例えば「VPN接続できない場合の対処法は？」→(1)VPN設定マニュアルを検索、(2)過去の類似QAを検索、(3)情報を統合して回答を作成。実行フェーズでは、計画の各サブタスクに対してツール選択→ツール実行→サブタスク回答を繰り返します。",
+            "termRefs": ["agent-term-plan-and-execute"]
+          },
+          {
+            "heading": "検索ツールの作成とRAG",
+            "body": "ヘルプデスクエージェントの中核となるのが検索ツールです。(1)マニュアル検索ツール：社内マニュアルをチャンクに分割し、[[agent-term-embedding-api|Embedding API]]でベクトル化してベクトルDBに格納。質問に意味的に近い箇所を検索する。(2)過去QA検索ツール：過去の問い合わせと回答のペアを同様にベクトル化し、類似の質問を検索する。[[agent-term-rag-long-context|RAGとロングコンテキスト]]の使い分けも重要で、マニュアル全体が[[aidev-term-context-window|コンテキストウィンドウ]]に収まるならロングコンテキスト、収まらないならRAGが適しています。単純なRAGでは「特定の情報を一箇所から取得する」質問には強いですが、「複数の条件を組み合わせる」質問には弱い点に注意が必要です。",
+            "termRefs": ["agent-term-embedding-api", "agent-term-rag-long-context", "aidev-term-context-window"]
+          },
+          {
+            "heading": "LangGraphによる実装と改善",
+            "body": "[[agent-term-langgraph|LangGraph]]で計画実行型エージェントを実装する場合、主要なノードは(1)計画作成、(2)ツール選択、(3)ツール実行、(4)サブタスク回答、(5)[[agent-term-self-correction|自己修正]]、(6)最終回答です。自己修正ノードでは、回答の品質を検証し、不十分な場合は計画を修正して再実行します。正確な回答が得られない場合の原因と対策として、計画不備（質問の分解が不適切→計画プロンプトの改善）、検索精度の問題（チャンクサイズの調整、メタデータフィルタリングの追加、検索クエリの書き換え）などがあります。",
+            "termRefs": ["agent-term-langgraph", "agent-term-self-correction"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["agent-concept-helpdesk-design", "agent-concept-search-tool-design", "agent-concept-plan-execute-impl"]
+    },
+    {
+      "id": "agent-topic-data-analysis",
+      "term": "Data Analysis Agent",
+      "termJa": "データ分析エージェント",
+      "meaning": "コード生成・実行・リフレクションのサイクルでデータ分析を自動化するシングルエージェントワークフロー。",
+      "article": {
+        "sections": [
+          {
+            "heading": "データ分析業務の課題とエージェントの適用",
+            "body": "データ分析業務では、BIツールの操作スキルが必要、複雑な分析はSQLやPythonの知識が要求される、分析の仮説構築に時間がかかるといった課題があります。[[agent-term-ai-agent|AIエージェント]]は自然言語の指示からPythonコードを生成・実行し、結果を解釈してレポートを作成します。具体的な製品としては、OpenAIのAdvanced Data Analysis（旧Code Interpreter）、各社のBI AIアシスタントなどがあります。エージェントの設計では、[[agent-term-single-agent|シングルエージェントワークフロー]]が基本で、コード生成→実行→結果検証のサイクルを繰り返します。",
+            "termRefs": ["agent-term-ai-agent", "agent-term-single-agent"]
+          },
+          {
+            "heading": "コード生成・実行・リフレクション",
+            "body": "データ分析エージェントの中核は3つのステップのサイクルです。(1)コード生成：データの概要と分析目的をLLMに伝え、Pythonコード（pandas、matplotlib等）を生成。(2)コード実行：生成コードを[[agent-term-e2b|E2B]]等のサンドボックス環境で実行。ホストシステムへの影響を隔離しつつ、ライブラリの利用やファイル操作を可能にする。(3)[[agent-term-reflection|リフレクション]]：実行結果（出力、エラー、グラフ）をLLMに返し、コードの問題点を分析させて修正コードを生成。このサイクルを成功するまで繰り返します。[[agent-term-code-interpreter|Code Interpreter]]はこの一連のプロセスを統合的に提供する仕組みです。",
+            "termRefs": ["agent-term-e2b", "agent-term-reflection", "agent-term-code-interpreter"]
+          },
+          {
+            "heading": "分析レポートの作成",
+            "body": "単発のコード実行を超えて、構造化された分析レポートを作成するには計画が必要です。(1)計画立案（仮説構築）：データの概要を分析し、「売上の季節変動パターンの特定」「顧客セグメントごとの購買傾向」等の分析仮説を生成。(2)仮説ごとのコード生成・実行：各仮説を検証するPythonコードを生成・実行し、グラフや統計結果を取得。(3)レポート生成：全ての実行結果を統合し、発見事項・考察・推奨アクションを含むMarkdownレポートを生成。この構造により、単なる集計を超えた洞察を提供できます。",
+            "termRefs": ["agent-term-planning"]
+          },
+          {
+            "heading": "課題と展望",
+            "body": "データ分析エージェントの課題として、(1)データの前処理（欠損値処理、型変換）で予期しないエラーが発生しやすい、(2)生成されたグラフの解釈が浅い場合がある（相関と因果の混同等）、(3)大規模データではコード実行のリソース管理が必要。改善の方向性として、ドメイン知識をプロンプトに組み込むこと、分析パターンのテンプレート化、[[agent-term-human-in-loop|ヒューマンインザループ]]で分析の方向性を人間が確認することが有効です。将来的にはマルチモーダル（グラフの画像を直接AIが解釈）や、複数データソースを横断する分析への発展が期待されます。",
+            "termRefs": ["agent-term-human-in-loop"]
+          }
+        ]
+      },
+      "relatedConceptIds": ["agent-concept-code-gen-cycle", "agent-concept-analysis-report", "agent-concept-sandbox-execution"]
     }
   ],
   "concepts": [
@@ -169,6 +267,78 @@
       "topicId": "agent-topic-architecture",
       "meaning": "シングルエージェントとマルチエージェントのワークフロー設計パターン。オーケストレーター型、議論型、階層型。",
       "relatedTermIds": ["agent-term-single-agent", "agent-term-multi-agent", "agent-term-ai-workflow"]
+    },
+    {
+      "id": "agent-concept-api-fundamentals",
+      "term": "API Fundamentals",
+      "termJa": "API基礎",
+      "topicId": "agent-topic-dev-setup",
+      "meaning": "Chat Completions API、推論モデル、構造化出力、Prompt Cachingなど、エージェント開発の基盤となるAPI知識。",
+      "relatedTermIds": ["agent-term-chat-completions", "agent-term-reasoning-models", "agent-term-structured-outputs", "agent-term-prompt-caching"]
+    },
+    {
+      "id": "agent-concept-function-calling",
+      "term": "Function Calling & Tools",
+      "termJa": "ツール連携の実装",
+      "topicId": "agent-topic-dev-setup",
+      "meaning": "Function Callingの仕組み、Web検索・RAG・Code Interpreterの実装方法、Assistants APIの活用。",
+      "relatedTermIds": ["agent-term-tool-use", "agent-term-code-interpreter", "agent-term-embedding-api", "agent-term-assistants-api"]
+    },
+    {
+      "id": "agent-concept-langgraph-basics",
+      "term": "LangGraph Basics",
+      "termJa": "LangGraph基礎",
+      "topicId": "agent-topic-dev-setup",
+      "meaning": "LangGraphのState・Node・Edge概念、ワークフローの構築手順、ヒューマンインザループの組み込み。",
+      "relatedTermIds": ["agent-term-langgraph", "agent-term-human-in-loop", "agent-term-local-llm"]
+    },
+    {
+      "id": "agent-concept-helpdesk-design",
+      "term": "Helpdesk Agent Design",
+      "termJa": "ヘルプデスクエージェント設計",
+      "topicId": "agent-topic-helpdesk",
+      "meaning": "ヘルプデスク業務の課題分析とPlan-and-Execute型エージェントの適用設計。",
+      "relatedTermIds": ["agent-term-ai-agent", "agent-term-plan-and-execute"]
+    },
+    {
+      "id": "agent-concept-search-tool-design",
+      "term": "Search Tool Design",
+      "termJa": "検索ツール設計",
+      "topicId": "agent-topic-helpdesk",
+      "meaning": "マニュアル検索・過去QA検索ツールの設計、RAGとロングコンテキストの使い分け。",
+      "relatedTermIds": ["agent-term-embedding-api", "agent-term-rag-long-context"]
+    },
+    {
+      "id": "agent-concept-plan-execute-impl",
+      "term": "Plan-Execute Implementation",
+      "termJa": "計画実行型の実装",
+      "topicId": "agent-topic-helpdesk",
+      "meaning": "LangGraphによるPlan-and-Execute型エージェントの実装パターンと、計画不備・検索精度の改善手法。",
+      "relatedTermIds": ["agent-term-langgraph", "agent-term-self-correction"]
+    },
+    {
+      "id": "agent-concept-code-gen-cycle",
+      "term": "Code Generation Cycle",
+      "termJa": "コード生成サイクル",
+      "topicId": "agent-topic-data-analysis",
+      "meaning": "コード生成→サンドボックス実行→リフレクションの反復サイクル。データ分析エージェントの中核パターン。",
+      "relatedTermIds": ["agent-term-reflection", "agent-term-e2b", "agent-term-code-interpreter"]
+    },
+    {
+      "id": "agent-concept-analysis-report",
+      "term": "Analysis Report Generation",
+      "termJa": "分析レポート生成",
+      "topicId": "agent-topic-data-analysis",
+      "meaning": "仮説構築→コード実行→レポート統合の流れで構造化された分析レポートを自動生成するプロセス。",
+      "relatedTermIds": ["agent-term-planning", "agent-term-single-agent"]
+    },
+    {
+      "id": "agent-concept-sandbox-execution",
+      "term": "Sandbox Execution",
+      "termJa": "サンドボックス実行",
+      "topicId": "agent-topic-data-analysis",
+      "meaning": "E2B等の隔離環境でAI生成コードを安全に実行する仕組み。セキュリティとリソース管理。",
+      "relatedTermIds": ["agent-term-e2b", "agent-term-code-interpreter"]
     }
   ],
   "terms": [
