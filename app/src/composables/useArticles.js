@@ -1,16 +1,43 @@
 import { ref, computed } from 'vue'
-import matter from 'gray-matter'
-import { marked } from 'marked'
+import { Marked } from 'marked'
+
+// gray-matter はNode.js専用のため、ブラウザ用の軽量frontmatterパーサーを使用
+function parseFrontmatter(raw) {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/)
+  if (!match) return { data: {}, content: raw }
+
+  const yamlStr = match[1]
+  const content = match[2]
+  const data = {}
+
+  for (const line of yamlStr.split('\n')) {
+    const kvMatch = line.match(/^(\w+):\s*(.+)$/)
+    if (!kvMatch) continue
+    const [, key, value] = kvMatch
+
+    if (value.startsWith('[') && value.endsWith(']')) {
+      // 配列: [tag1, tag2, tag3]
+      data[key] = value.slice(1, -1).split(',').map(s => s.trim())
+    } else if (value.startsWith('"') && value.endsWith('"')) {
+      // クォート付き文字列
+      data[key] = value.slice(1, -1)
+    } else {
+      data[key] = value
+    }
+  }
+
+  return { data, content }
+}
 
 // content/**/*.md を文字列として一括読み込み
-const mdModules = import.meta.glob('../content/**/*.md', {
+const mdModules = import.meta.glob('../../../content/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default'
 })
 
 // _category.yml を読み込み
-const categoryModules = import.meta.glob('../content/**/_category.yml', {
+const categoryModules = import.meta.glob('../../../content/**/_category.yml', {
   eager: true,
   query: '?raw',
   import: 'default'
@@ -79,7 +106,7 @@ export function useArticles() {
     const category = path.match(/content\/([^/]+)\//)?.[1]
     if (!slug || !category) continue
 
-    const { data: frontmatter, content } = matter(raw)
+    const { data: frontmatter, content } = parseFrontmatter(raw)
     articleList.push({
       slug,
       category,
@@ -92,7 +119,7 @@ export function useArticles() {
   }
 
   // marked インスタンスを設定（Wikilink対応）
-  const markedInstance = new marked.Marked()
+  const markedInstance = new Marked()
   markedInstance.use(createWikilinkExtension(articleList))
 
   // HTML を生成
