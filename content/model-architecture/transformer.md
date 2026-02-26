@@ -2,7 +2,7 @@
 title: "トランスフォーマー"
 tags: [transformer, attention, positional-encoding]
 created: 2026-02-25
-updated: 2026-02-25
+updated: 2026-02-26
 ---
 
 ## Transformerの革新

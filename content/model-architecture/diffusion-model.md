@@ -2,7 +2,7 @@
 title: "拡散モデル"
 tags: [diffusion, generative]
 created: 2026-02-25
-updated: 2026-02-25
+updated: 2026-02-26
 ---
 
 ## 拡散モデルの考え方
